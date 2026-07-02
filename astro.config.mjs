@@ -2,10 +2,10 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// NOTE: replace `site` with your real deployment origin so canonical URLs,
+// `site` must match the real deployment origin so canonical URLs,
 // hreflang links and the generated sitemap point to the correct domain.
 export default defineConfig({
-  site: 'https://claude-cn-detector.pages.dev',
+  site: 'https://fuck-claude.vercel.app',
   output: 'static',
   i18n: {
     locales: ['en', 'zh'],

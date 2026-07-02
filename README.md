@@ -52,9 +52,11 @@ src/
 ├── config/signals.ts    # signal definitions, weights, detectors, icons
 ├── i18n/ui.ts           # EN/ZH copy dictionary + translator
 ├── scripts/detect.ts    # animated scan + scoring + verdict (client)
-├── layouts/BaseLayout.astro  # <head> SEO + global styles
+├── layouts/BaseLayout.astro  # <head> SEO + GA + global styles
 ├── components/          # Detector, ScoreRing, LangToggle, Footer
 └── pages/               # index.astro (en) + zh/index.astro
+scripts/
+└── gen-assets.mjs       # regenerates favicon / PWA icons / og.png (node scripts/gen-assets.mjs)
 ```
 
 ## Develop
@@ -132,9 +134,11 @@ src/
 ├── config/signals.ts    # 信号定义、权重、检测函数、图标
 ├── i18n/ui.ts           # 中英文案字典 + 取值 helper
 ├── scripts/detect.ts    # 扫描动效 + 打分 + 结论(客户端)
-├── layouts/BaseLayout.astro  # <head> SEO + 全局样式
+├── layouts/BaseLayout.astro  # <head> SEO + GA + 全局样式
 ├── components/          # Detector、ScoreRing、LangToggle、Footer
 └── pages/               # index.astro(英)+ zh/index.astro(中)
+scripts/
+└── gen-assets.mjs       # 重新生成 favicon / PWA 图标 / og.png(node scripts/gen-assets.mjs)
 ```
 
 ## 本地开发

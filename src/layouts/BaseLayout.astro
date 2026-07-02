@@ -9,17 +9,25 @@ interface Props {
 const { lang, path } = Astro.props;
 const t = useTranslations(lang);
 
-const site = Astro.site ?? new URL('https://claude-cn-detector.pages.dev');
+const site = Astro.site ?? new URL('https://fuck-claude.vercel.app');
 const canonical = new URL(path, site).href;
 const enUrl = new URL('/', site).href;
 const zhUrl = new URL('/zh/', site).href;
-const ogImage = new URL('/favicon.svg', site).href;
+const ogImage = new URL('/og.png', site).href;
 
 const htmlLang = lang === 'zh' ? 'zh-CN' : 'en';
 const ogLocale = lang === 'zh' ? 'zh_CN' : 'en_US';
 
 const title = t('meta.title');
 const description = t('meta.description');
+
+const GA_ID = 'G-S19V74WZZJ';
+
+const faq = [1, 2, 3, 4].map((i) => ({
+  '@type': 'Question',
+  name: t(`faq.q${i}`),
+  acceptedAnswer: { '@type': 'Answer', text: t(`faq.a${i}`) },
+}));
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -32,28 +40,18 @@ const jsonLd = {
       applicationCategory: 'SecurityApplication',
       operatingSystem: 'All',
       inLanguage: htmlLang,
+      image: ogImage,
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    },
-    {
-      '@type': 'FAQPage',
-      mainEntity: [
-        {
-          '@type': 'Question',
-          name: t('hero.title'),
-          acceptedAnswer: { '@type': 'Answer', text: t('hero.subtitle') },
-        },
-        {
-          '@type': 'Question',
-          name: t('signal.timezone.name'),
-          acceptedAnswer: { '@type': 'Answer', text: t('signal.timezone.desc') },
-        },
-        {
-          '@type': 'Question',
-          name: t('privacy.title'),
-          acceptedAnswer: { '@type': 'Answer', text: t('privacy.body') },
-        },
+      featureList: [
+        t('signal.timezone.name'),
+        t('signal.language.name'),
+        t('signal.fonts.name'),
+        t('signal.intlLocale.name'),
+        t('signal.timezoneOffset.name'),
+        t('signal.emoji.name'),
       ],
     },
+    { '@type': 'FAQPage', mainEntity: faq },
   ],
 };
 ---
@@ -63,8 +61,14 @@ const jsonLd = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0b0f19" />
+    <meta name="theme-color" content="#FAF9F5" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="generator" content={Astro.generator} />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -75,10 +79,14 @@ const jsonLd = {
     <link rel="alternate" hreflang="x-default" href={enUrl} />
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={t('nav.title')} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t('hero.title')} />
     <meta property="og:locale" content={ogLocale} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
@@ -86,32 +94,48 @@ const jsonLd = {
     <meta name="twitter:image" content={ogImage} />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+    ></script>
+    <script is:inline define:vars={{ GA_ID }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', GA_ID);
+    </script>
   </head>
   <body>
     <slot />
 
     <style is:global>
       :root {
-        --bg: #0b0f19;
-        --bg-soft: #0f1524;
-        --surface: #131a2c;
-        --surface-2: #182135;
-        --border: rgba(255, 255, 255, 0.08);
-        --border-strong: rgba(255, 255, 255, 0.16);
-        --text: #e6eaf3;
-        --muted: #93a1bd;
-        --muted-2: #64748b;
-        --accent: #22d3ee;
-        --accent-2: #e879f9;
-        --low: #34d399;
-        --medium: #fbbf24;
-        --high: #fb7185;
-        --grad: linear-gradient(135deg, var(--accent), var(--accent-2));
-        --radius: 16px;
-        --radius-sm: 10px;
+        --bg: #faf9f5;
+        --bg-soft: #f5f3ec;
+        --surface: #ffffff;
+        --surface-2: #f0eee6;
+        --border: #e8e4d8;
+        --border-strong: #d9d3c3;
+        --text: #1f1e1d;
+        --muted: #63615b;
+        --muted-2: #8a887f;
+        --accent: #d97757;
+        --accent-strong: #c05f3c;
+        --accent-soft: rgba(217, 119, 87, 0.1);
+        --low: #5e8c61;
+        --medium: #b58121;
+        --high: #bf4d3d;
+        --shadow-sm: 0 1px 2px rgba(31, 30, 29, 0.05), 0 2px 8px rgba(31, 30, 29, 0.05);
+        --shadow-md: 0 2px 6px rgba(31, 30, 29, 0.06), 0 10px 32px rgba(31, 30, 29, 0.08);
+        --radius: 18px;
+        --radius-sm: 12px;
         --maxw: 1040px;
-        --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-          Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        --font:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+          'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        --serif: 'Georgia', 'Times New Roman', 'Songti SC', 'STSong', 'SimSun', serif;
         --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
       }
 
@@ -127,17 +151,14 @@ const jsonLd = {
         margin: 0;
         font-family: var(--font);
         color: var(--text);
-        background:
-          radial-gradient(1200px 700px at 80% -10%, rgba(232, 121, 249, 0.12), transparent 60%),
-          radial-gradient(1000px 600px at -10% 0%, rgba(34, 211, 238, 0.12), transparent 55%),
-          var(--bg);
+        background: var(--bg);
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
         text-rendering: optimizeLegibility;
       }
 
       a {
-        color: var(--accent);
+        color: var(--accent-strong);
         text-decoration: none;
       }
       a:hover {
@@ -157,7 +178,7 @@ const jsonLd = {
         top: 0;
         z-index: 20;
         backdrop-filter: blur(12px);
-        background: rgba(11, 15, 25, 0.72);
+        background: rgba(250, 249, 245, 0.85);
         border-bottom: 1px solid var(--border);
       }
       .nav__inner {
@@ -179,9 +200,10 @@ const jsonLd = {
         text-decoration: none;
       }
       .brand svg {
-        width: 26px;
-        height: 26px;
+        width: 24px;
+        height: 24px;
         flex: none;
+        color: var(--accent);
       }
       .nav__actions {
         display: flex;
@@ -195,6 +217,7 @@ const jsonLd = {
         border-radius: 999px;
         overflow: hidden;
         font-size: 0.82rem;
+        background: var(--surface);
       }
       .lang-toggle a {
         padding: 5px 12px;
@@ -205,8 +228,8 @@ const jsonLd = {
         color: var(--text);
       }
       .lang-toggle a[aria-current='page'] {
-        background: var(--grad);
-        color: #08101c;
+        background: var(--accent);
+        color: #fff;
         font-weight: 650;
       }
       .icon-link {
@@ -220,59 +243,109 @@ const jsonLd = {
       /* ---------- hero ---------- */
       .hero {
         text-align: center;
-        padding: 56px 0 24px;
+        padding: 52px 0 8px;
       }
       .hero h1 {
-        font-size: clamp(1.7rem, 4.5vw, 2.7rem);
-        line-height: 1.2;
+        font-family: var(--serif);
+        font-size: clamp(2rem, 5.2vw, 3.1rem);
+        line-height: 1.16;
         margin: 0 auto 14px;
-        max-width: 20ch;
-        letter-spacing: -0.02em;
+        max-width: 22ch;
+        letter-spacing: -0.01em;
+        font-weight: 700;
       }
       .hero .accent {
-        background: var(--grad);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
+        color: var(--accent-strong);
+        font-style: italic;
       }
       .hero p.sub {
         color: var(--muted);
-        max-width: 60ch;
+        max-width: 58ch;
         margin: 0 auto;
-        font-size: 1.02rem;
+        font-size: 1.05rem;
       }
-      .tagline {
-        margin-top: 18px;
+      .trust {
+        list-style: none;
+        margin: 20px auto 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+      }
+      .trust li {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        font-size: 0.82rem;
+        gap: 7px;
+        font-size: 0.83rem;
         color: var(--muted);
         border: 1px solid var(--border);
         border-radius: 999px;
-        padding: 6px 14px;
-        background: rgba(255, 255, 255, 0.02);
+        padding: 5px 13px;
+        background: var(--surface);
       }
-      .tagline::before {
+      .trust li::before {
         content: '';
-        width: 8px;
-        height: 8px;
+        width: 7px;
+        height: 7px;
         border-radius: 50%;
         background: var(--low);
-        box-shadow: 0 0 10px var(--low);
       }
 
-      /* ---------- score gauge ---------- */
+      /* ---------- credit banner ---------- */
+      .credit {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 20px;
+        padding: 7px 16px;
+        border-radius: 999px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: var(--accent-strong);
+        border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+        background: var(--surface);
+        box-shadow: var(--shadow-sm);
+      }
+      .credit__spark {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: credit-pulse 1.8s ease-in-out infinite;
+        flex: none;
+      }
+      @keyframes credit-pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.45);
+          opacity: 0.55;
+        }
+      }
+
+      /* ---------- score panel ---------- */
+      .panel {
+        margin: 26px auto 0;
+        padding: 34px 26px 30px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-md);
+        text-align: center;
+      }
       .gauge {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin: 30px auto 6px;
       }
       .gauge__ring {
         position: relative;
-        width: 220px;
-        height: 220px;
+        width: 210px;
+        height: 210px;
       }
       .gauge__ring svg {
         width: 100%;
@@ -281,7 +354,7 @@ const jsonLd = {
       }
       .gauge__track {
         fill: none;
-        stroke: rgba(255, 255, 255, 0.08);
+        stroke: var(--surface-2);
         stroke-width: 14;
       }
       #score-ring {
@@ -289,7 +362,9 @@ const jsonLd = {
         stroke: var(--accent);
         stroke-width: 14;
         stroke-linecap: round;
-        transition: stroke-dashoffset 1s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.6s ease;
+        transition:
+          stroke-dashoffset 1s cubic-bezier(0.16, 1, 0.3, 1),
+          stroke 0.6s ease;
       }
       #score-gauge[data-band='low'] #score-ring {
         stroke: var(--low);
@@ -310,11 +385,12 @@ const jsonLd = {
         gap: 2px;
       }
       .gauge__num {
-        font-size: 3.4rem;
-        font-weight: 750;
+        font-family: var(--serif);
+        font-size: 3.6rem;
+        font-weight: 700;
         line-height: 1;
         font-variant-numeric: tabular-nums;
-        letter-spacing: -0.03em;
+        letter-spacing: -0.02em;
       }
       .gauge__outof {
         color: var(--muted-2);
@@ -322,7 +398,7 @@ const jsonLd = {
         font-family: var(--mono);
       }
       .risk-badge {
-        margin-top: 16px;
+        margin-top: 18px;
         display: inline-block;
         padding: 7px 18px;
         border-radius: 999px;
@@ -330,59 +406,86 @@ const jsonLd = {
         font-size: 0.95rem;
         border: 1px solid var(--border-strong);
         color: var(--muted);
+        background: var(--bg);
       }
       .risk-badge[data-band='low'] {
         color: var(--low);
-        border-color: color-mix(in srgb, var(--low) 45%, transparent);
-        background: color-mix(in srgb, var(--low) 12%, transparent);
+        border-color: color-mix(in srgb, var(--low) 40%, transparent);
+        background: color-mix(in srgb, var(--low) 10%, var(--surface));
       }
       .risk-badge[data-band='medium'] {
         color: var(--medium);
-        border-color: color-mix(in srgb, var(--medium) 45%, transparent);
-        background: color-mix(in srgb, var(--medium) 12%, transparent);
+        border-color: color-mix(in srgb, var(--medium) 40%, transparent);
+        background: color-mix(in srgb, var(--medium) 10%, var(--surface));
       }
       .risk-badge[data-band='high'] {
         color: var(--high);
-        border-color: color-mix(in srgb, var(--high) 45%, transparent);
-        background: color-mix(in srgb, var(--high) 12%, transparent);
+        border-color: color-mix(in srgb, var(--high) 40%, transparent);
+        background: color-mix(in srgb, var(--high) 10%, var(--surface));
       }
       .risk-desc {
-        margin: 14px auto 0;
+        margin: 12px auto 0;
         color: var(--muted);
         max-width: 46ch;
         min-height: 1.6em;
+        font-size: 1.02rem;
       }
-      .retest {
-        margin-top: 20px;
+
+      /* ---------- big scan button ---------- */
+      .scan-btn {
+        margin-top: 22px;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 9px 18px;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px 40px;
         border-radius: 999px;
-        border: 1px solid var(--border-strong);
-        background: var(--surface);
-        color: var(--text);
+        border: none;
+        background: var(--accent);
+        color: #fff;
         font: inherit;
-        font-size: 0.9rem;
+        font-size: 1.08rem;
+        font-weight: 650;
         cursor: pointer;
-        transition: border-color 0.2s, transform 0.1s;
+        box-shadow:
+          0 2px 8px rgba(217, 119, 87, 0.35),
+          0 8px 24px rgba(217, 119, 87, 0.22);
+        transition:
+          background 0.2s,
+          transform 0.12s,
+          box-shadow 0.2s;
       }
-      .retest:hover {
-        border-color: var(--accent);
+      .scan-btn:hover {
+        background: var(--accent-strong);
+        transform: translateY(-1px);
+        box-shadow:
+          0 3px 10px rgba(192, 95, 60, 0.4),
+          0 10px 28px rgba(192, 95, 60, 0.26);
       }
-      .retest:active {
-        transform: scale(0.97);
+      .scan-btn:active {
+        transform: scale(0.98);
+      }
+      .scan-btn:disabled {
+        opacity: 0.55;
+        cursor: default;
+        transform: none;
+        box-shadow: none;
+      }
+      .scan-btn svg {
+        width: 18px;
+        height: 18px;
       }
 
       /* ---------- sections ---------- */
       section {
-        padding: 34px 0;
+        padding: 30px 0;
       }
       .section-head {
-        margin-bottom: 20px;
+        margin-bottom: 18px;
       }
       .section-head h2 {
-        font-size: 1.4rem;
+        font-family: var(--serif);
+        font-size: 1.55rem;
         margin: 0 0 6px;
         letter-spacing: -0.01em;
       }
@@ -392,74 +495,14 @@ const jsonLd = {
         font-size: 0.95rem;
       }
 
-      /* ---------- credit banner ---------- */
-      .credit {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        gap: 9px;
-        margin-bottom: 22px;
-        padding: 8px 16px;
-        border-radius: 999px;
-        font-size: 0.85rem;
-        font-weight: 650;
-        overflow: hidden;
-        border: 1px solid transparent;
-        background:
-          linear-gradient(var(--bg-soft), var(--bg-soft)) padding-box,
-          linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent)) border-box;
-        background-size: 100% 100%, 220% 100%;
-        animation: credit-border 4s linear infinite, credit-float 4.5s ease-in-out infinite;
-      }
-      .credit__text {
-        background: var(--grad);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        position: relative;
-        z-index: 1;
-      }
-      .credit__spark {
-        width: 9px;
-        height: 9px;
-        border-radius: 50%;
-        background: var(--grad);
-        box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent) 75%, transparent);
-        animation: credit-pulse 1.6s ease-in-out infinite;
-        flex: none;
-        z-index: 1;
-      }
-      .credit__shine {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
-        transform: translateX(-120%);
-        animation: credit-shine 3.4s ease-in-out infinite;
-      }
-      @keyframes credit-border {
-        to { background-position: 0 0, -220% 0; }
-      }
-      @keyframes credit-float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-3px); }
-      }
-      @keyframes credit-pulse {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.5); opacity: 0.6; }
-      }
-      @keyframes credit-shine {
-        0% { transform: translateX(-120%); }
-        55%, 100% { transform: translateX(120%); }
-      }
-
       /* ---------- result chips ---------- */
       .result {
-        margin: 22px auto 0;
+        margin: 20px auto 0;
         max-width: 640px;
       }
       .result__title {
         margin: 0 0 12px;
-        font-size: 0.95rem;
+        font-size: 0.92rem;
         color: var(--muted);
       }
       .result__hits {
@@ -476,7 +519,7 @@ const jsonLd = {
         border-radius: 999px;
         font-size: 0.85rem;
         border: 1px solid var(--border-strong);
-        background: var(--surface);
+        background: var(--bg);
         animation: chip-in 0.35s ease both;
       }
       .chip b {
@@ -493,17 +536,23 @@ const jsonLd = {
       }
       .chip[data-verdict='high'] {
         color: var(--high);
-        border-color: color-mix(in srgb, var(--high) 45%, transparent);
-        background: color-mix(in srgb, var(--high) 10%, transparent);
+        border-color: color-mix(in srgb, var(--high) 40%, transparent);
+        background: color-mix(in srgb, var(--high) 8%, var(--surface));
       }
       .chip[data-verdict='medium'] {
         color: var(--medium);
-        border-color: color-mix(in srgb, var(--medium) 45%, transparent);
-        background: color-mix(in srgb, var(--medium) 10%, transparent);
+        border-color: color-mix(in srgb, var(--medium) 40%, transparent);
+        background: color-mix(in srgb, var(--medium) 8%, var(--surface));
       }
       @keyframes chip-in {
-        from { opacity: 0; transform: translateY(6px) scale(0.96); }
-        to { opacity: 1; transform: none; }
+        from {
+          opacity: 0;
+          transform: translateY(6px) scale(0.96);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
       }
 
       /* ---------- scan list ---------- */
@@ -522,17 +571,21 @@ const jsonLd = {
         gap: 14px;
         padding: 14px 16px;
         border-radius: var(--radius-sm);
-        background: linear-gradient(180deg, var(--surface), var(--bg-soft));
+        background: var(--surface);
         border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
         overflow: hidden;
-        opacity: 0.5;
+        opacity: 0.55;
         transform: translateY(4px);
-        transition: opacity 0.4s, transform 0.4s, border-color 0.3s;
+        transition:
+          opacity 0.4s,
+          transform 0.4s,
+          border-color 0.3s;
       }
       .scan-row.is-active {
         opacity: 1;
         transform: none;
-        border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+        border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
       }
       .scan-row.is-done {
         opacity: 1;
@@ -547,19 +600,32 @@ const jsonLd = {
         width: 3px;
         background: transparent;
       }
-      .scan-row[data-verdict='low']::before { background: var(--low); }
-      .scan-row[data-verdict='medium']::before { background: var(--medium); }
-      .scan-row[data-verdict='high']::before { background: var(--high); }
+      .scan-row[data-verdict='low']::before {
+        background: var(--low);
+      }
+      .scan-row[data-verdict='medium']::before {
+        background: var(--medium);
+      }
+      .scan-row[data-verdict='high']::before {
+        background: var(--high);
+      }
       .scan-row.is-active::after {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 20%, transparent), transparent);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          color-mix(in srgb, var(--accent) 12%, transparent),
+          transparent
+        );
         transform: translateX(-100%);
         animation: scan-sweep 1s ease-in-out infinite;
       }
       @keyframes scan-sweep {
-        to { transform: translateX(100%); }
+        to {
+          transform: translateX(100%);
+        }
       }
       .scan-row__icon {
         width: 38px;
@@ -567,9 +633,9 @@ const jsonLd = {
         border-radius: 10px;
         display: grid;
         place-items: center;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid var(--border);
-        color: var(--accent);
+        background: var(--accent-soft);
+        border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border));
+        color: var(--accent-strong);
         flex: none;
         z-index: 1;
       }
@@ -631,11 +697,19 @@ const jsonLd = {
         animation: spin 0.7s linear infinite;
         flex: none;
       }
-      .scan-row.is-active .spinner { display: inline-block; }
-      .scan-row .dot { display: none; }
-      .scan-row.is-done .dot { display: inline-block; }
+      .scan-row.is-active .spinner {
+        display: inline-block;
+      }
+      .scan-row .dot {
+        display: none;
+      }
+      .scan-row.is-done .dot {
+        display: inline-block;
+      }
       @keyframes spin {
-        to { transform: rotate(360deg); }
+        to {
+          transform: rotate(360deg);
+        }
       }
       .badge {
         display: inline-block;
@@ -646,11 +720,12 @@ const jsonLd = {
         color: var(--muted);
         white-space: nowrap;
         line-height: 1.5;
+        background: var(--bg);
       }
       .badge--claude {
-        color: #08101c;
-        background: var(--grad);
-        border: none;
+        color: #fff;
+        background: var(--accent);
+        border-color: var(--accent);
         font-weight: 650;
       }
       .dot {
@@ -663,24 +738,83 @@ const jsonLd = {
       }
       .dot--low {
         background: var(--low);
-        box-shadow: 0 0 8px color-mix(in srgb, var(--low) 70%, transparent);
       }
       .dot--medium {
         background: var(--medium);
-        box-shadow: 0 0 8px color-mix(in srgb, var(--medium) 70%, transparent);
       }
       .dot--high {
         background: var(--high);
-        box-shadow: 0 0 8px color-mix(in srgb, var(--high) 70%, transparent);
       }
+
+      /* ---------- how + faq ---------- */
+      .prose {
+        max-width: 76ch;
+      }
+      .prose p {
+        margin: 0 0 14px;
+        color: var(--muted);
+        font-size: 0.97rem;
+      }
+      .prose p:last-child {
+        margin-bottom: 0;
+      }
+
+      .faq {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .faq details {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        box-shadow: var(--shadow-sm);
+        padding: 0 18px;
+        transition: border-color 0.2s;
+      }
+      .faq details[open] {
+        border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+      }
+      .faq summary {
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 0;
+        font-weight: 620;
+        font-size: 0.98rem;
+      }
+      .faq summary::-webkit-details-marker {
+        display: none;
+      }
+      .faq summary::after {
+        content: '+';
+        font-family: var(--mono);
+        font-size: 1.1rem;
+        color: var(--accent-strong);
+        flex: none;
+        transition: transform 0.2s;
+      }
+      .faq details[open] summary::after {
+        transform: rotate(45deg);
+      }
+      .faq details p {
+        margin: 0;
+        padding: 0 0 16px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
       /* ---------- privacy + footer ---------- */
       .privacy {
         display: flex;
         gap: 14px;
         align-items: flex-start;
         padding: 16px 18px;
-        border: 1px solid color-mix(in srgb, var(--low) 30%, var(--border));
-        background: color-mix(in srgb, var(--low) 7%, transparent);
+        border: 1px solid color-mix(in srgb, var(--low) 32%, var(--border));
+        background: color-mix(in srgb, var(--low) 6%, var(--surface));
         border-radius: var(--radius);
       }
       .privacy svg {
@@ -706,6 +840,7 @@ const jsonLd = {
         padding: 28px 0 44px;
         color: var(--muted-2);
         font-size: 0.85rem;
+        background: var(--bg-soft);
       }
       .footer__disclaimer {
         margin: 0;
@@ -715,13 +850,22 @@ const jsonLd = {
       /* ---------- responsive ---------- */
       @media (max-width: 560px) {
         .hero {
-          padding-top: 36px;
+          padding-top: 34px;
+        }
+        .panel {
+          padding: 26px 16px 24px;
         }
         .scan-row__desc {
           display: none;
         }
+        .scan-row .badge:not(.badge--claude) {
+          display: none;
+        }
         .scan-row__value {
           max-width: 24vw;
+        }
+        .scan-btn {
+          width: 100%;
         }
       }
 
@@ -729,6 +873,7 @@ const jsonLd = {
         * {
           scroll-behavior: auto !important;
           transition: none !important;
+          animation: none !important;
         }
       }
     </style>

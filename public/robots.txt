@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://fuckclaude-6b0.pages.dev/sitemap-index.xml
+Sitemap: https://fuck-claude.happinessrailway.com/sitemap-index.xml

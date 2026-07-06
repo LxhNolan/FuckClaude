@@ -10,7 +10,7 @@ export interface Sponsor {
   id: string;
   name: string;
   /** Outbound (referral) link; the whole banner row links here. */
-  url: string;
+  url: Record<Lang, string>;
   /** Path under `public/`, e.g. `/sponsors/foo.png`. */
   logo: string;
   /** Intrinsic logo size, used to reserve space and avoid layout shift. */
@@ -28,7 +28,10 @@ export const SPONSORS: Sponsor[] = [
   {
     id: 'ergou',
     name: '二狗 API',
-    url: 'https://ergouapi.com/r/gh-fuckclaude',
+    url: {
+      zh: 'https://ergouapi.com/r/gh-fuckclaude',
+      en: 'https://ergouapi.com/r/gh-fuckclaude',
+    },
     logo: '/sponsors/ergou-wordmark-340x112.png',
     logoWidth: 340,
     logoHeight: 112,
@@ -48,7 +51,10 @@ export const SPONSORS: Sponsor[] = [
   {
     id: 'roxy',
     name: 'Roxy浏览器',
-    url: 'https://roxybrowser.com/invite/0326196A',
+    url: {
+      zh: 'https://roxybrowser.cn/invite/0326196A',
+      en: 'https://roxybrowser.com/invite/0326196A',
+    },
     logo: '/sponsors/roxy-wordmark.jpg',
     logoWidth: 500,
     logoHeight: 200,
@@ -68,7 +74,10 @@ export const SPONSORS: Sponsor[] = [
   {
     id: 'geek2api',
     name: 'Geek2API',
-    url: 'https://hk.geek2api.com?ref=fuckclaude',
+    url: {
+      zh: 'https://hk.geek2api.com?ref=fuckclaude',
+      en: 'https://hk.geek2api.com?ref=fuckclaude',
+    },
     logo: '/sponsors/geek2api-wordmark-340x108.jpg',
     logoWidth: 340,
     logoHeight: 108,

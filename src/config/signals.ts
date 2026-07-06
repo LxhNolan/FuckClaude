@@ -12,6 +12,9 @@ export type SignalId =
   | 'language'
   | 'intlLocale'
   | 'fonts'
+  | 'vendorFonts'
+  | 'cnBrowser'
+  | 'deviceVendor'
   | 'emoji';
 
 export interface DetectOutcome {
@@ -23,13 +26,14 @@ export interface DetectOutcome {
 
 export interface SignalDef {
   id: SignalId;
-  /** Scoring weight; the six weights sum to 100. */
+  /** Scoring weight; all weights sum to 100. */
   weight: number;
   /** True when Claude Code's real mechanism actually reads this signal. */
   claudeUsed?: boolean;
   /** Inline SVG icon markup. */
   icon: string;
-  detect: () => DetectOutcome;
+  /** Sync or async (e.g. userAgentData high-entropy values) detector. */
+  detect: () => DetectOutcome | Promise<DetectOutcome>;
 }
 
 export const CN_TIMEZONES = [
@@ -73,6 +77,72 @@ const FONTS_TC = [
   'PingFang HK',
   'Source Han Sans TW',
   'Noto Sans CJK TC',
+];
+
+/**
+ * Fonts shipped by Chinese device vendors or installed by Chinese software
+ * (WPS bundles the Founder "FZ*" faces). Rarely present outside a
+ * Chinese-vendor device / Chinese software environment, so any hit is strong.
+ */
+const FONTS_CN_VENDOR = [
+  'MiSans', // Xiaomi HyperOS / MIUI
+  'MIUI', // legacy Xiaomi
+  'HarmonyOS Sans SC', // Huawei
+  'HarmonyOS Sans', // Huawei
+  'HONOR Sans', // Honor
+  'OPPO Sans', // OPPO / OnePlus (CN)
+  'vivo Sans', // vivo
+  'Alibaba PuHuiTi', // Alibaba
+  'Alibaba Sans', // Alibaba
+  'DingTalk JinBuTi', // DingTalk
+  'Douyin Sans', // ByteDance / Douyin
+  'HYQiHei', // HanYi, bundled by several CN apps
+  'FZShuSong-Z01S', // Founder faces installed with WPS Office
+  'FZKai-Z03S',
+  'FZHei-B01S',
+  'FZFangSong-Z02S',
+];
+
+/** Chinese browsers and in-app WebViews, matched against UA + UA-CH brands. */
+const CN_BROWSER_PATTERNS: Array<[RegExp, string]> = [
+  [/micromessenger|wxwork/i, 'WeChat'],
+  [/mqqbrowser|qqbrowser|\bqq\//i, 'QQ Browser'],
+  [/quark/i, 'Quark'],
+  [/ucbrowser|ucweb/i, 'UC Browser'],
+  [/baiduboxapp|bidubrowser|baidubrowser/i, 'Baidu'],
+  [/miuibrowser|xiaomi\/|mibrowser/i, 'Mi Browser'],
+  [/huaweibrowser/i, 'Huawei Browser'],
+  [/heytapbrowser|oppobrowser/i, 'HeyTap (OPPO)'],
+  [/vivobrowser/i, 'vivo Browser'],
+  [/sogoumobilebrowser|\bmetasr\b|\bse 2\.x\b/i, 'Sogou'],
+  [/maxthon/i, 'Maxthon'],
+  [/360se|360ee|qihoobrowser|\bqhbrowser\b/i, '360 Browser'],
+  [/2345explorer|2345browser/i, '2345'],
+  [/lbbrowser/i, 'Liebao'],
+  [/theworld/i, 'TheWorld'],
+  [/aweme|bytedancewebview|newsarticle|toutiaomicroapp/i, 'Douyin / Toutiao'],
+  [/alipayclient/i, 'Alipay'],
+  [/dingtalk/i, 'DingTalk'],
+  [/weibo/i, 'Weibo'],
+  [/xiaohongshu|xhsminiapp/i, 'Xiaohongshu'],
+  [/\bbilibili\b/i, 'Bilibili'],
+];
+
+/**
+ * Chinese device brands / OSes, matched against UA-CH model + UA.
+ * HarmonyOS is conclusive; brands that also sell globally score lower.
+ */
+const CN_DEVICE_PATTERNS: Array<[RegExp, string, number]> = [
+  [/harmonyos|openharmony/i, 'HarmonyOS', 1],
+  [/huawei|\bhonor\b/i, 'Huawei / Honor', 0.8],
+  [/meizu/i, 'Meizu', 0.8],
+  [/nubia|\bzte\b/i, 'ZTE / nubia', 0.7],
+  [/xiaomi|redmi|\bpoco\b|\bm2\d{3}[a-z0-9]+\b/i, 'Xiaomi', 0.6],
+  [/oppo|\bpd[a-z]m\d{2}\b/i, 'OPPO', 0.6],
+  [/vivo|\bv2\d{3}[a-z]{1,2}\b/i, 'vivo', 0.6],
+  [/realme|\brmx\d{4}\b/i, 'realme', 0.6],
+  [/oneplus/i, 'OnePlus', 0.6],
+  [/\blenovo\b|\bzuk\b/i, 'Lenovo', 0.5],
 ];
 
 function getTimezone(): string {
@@ -174,6 +244,63 @@ function detectFonts(): DetectOutcome {
   return { raw, score };
 }
 
+function detectVendorFonts(): DetectOutcome {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return { raw: 'canvas unavailable', score: 0 };
+
+  const hit = FONTS_CN_VENDOR.filter((f) => isFontAvailable(f, ctx));
+  // Any vendor face is near-conclusive; two or more leaves no doubt.
+  const score = hit.length >= 2 ? 1 : hit.length === 1 ? 0.8 : 0;
+  const raw = hit.length ? hit.slice(0, 3).join(', ') + (hit.length > 3 ? '…' : '') : 'none detected';
+  return { raw, score };
+}
+
+type UADataBrand = { brand: string; version: string };
+interface UAData {
+  brands?: UADataBrand[];
+  getHighEntropyValues?: (hints: string[]) => Promise<Record<string, unknown>>;
+}
+
+function uaData(): UAData | undefined {
+  return (navigator as Navigator & { userAgentData?: UAData }).userAgentData;
+}
+
+/** Pure Chinese-browser scoring, reused server-side against the User-Agent header. */
+export function scoreCnBrowser(probe: string): { name: string | null; score: number } {
+  for (const [re, name] of CN_BROWSER_PATTERNS) {
+    if (re.test(probe)) return { name, score: 1 };
+  }
+  return { name: null, score: 0 };
+}
+
+function detectCnBrowser(): DetectOutcome {
+  const brands = (uaData()?.brands ?? []).map((b) => b.brand).join(' ');
+  const { name, score } = scoreCnBrowser(`${navigator.userAgent} ${brands}`);
+  return { raw: name ?? 'none detected', score };
+}
+
+/** Pure Chinese-device scoring, reused server-side against the User-Agent header. */
+export function scoreCnDevice(probe: string): { name: string | null; score: number } {
+  for (const [re, name, score] of CN_DEVICE_PATTERNS) {
+    if (re.test(probe)) return { name, score };
+  }
+  return { name: null, score: 0 };
+}
+
+async function detectDeviceVendor(): Promise<DetectOutcome> {
+  // UA-CH high-entropy `model` restores what UA reduction hides on Android.
+  let extra = '';
+  try {
+    const high = await uaData()?.getHighEntropyValues?.(['model', 'platform', 'platformVersion']);
+    if (high) extra = ` ${String(high.model ?? '')} ${String(high.platform ?? '')}`;
+  } catch {
+    /* hints denied — fall back to the plain UA */
+  }
+  const { name, score } = scoreCnDevice(`${navigator.userAgent}${extra}`);
+  return { raw: name ?? 'none detected', score };
+}
+
 /** Pure emoji-vendor guess, reused server-side against the User-Agent header. */
 export function scoreEmojiVendor(probe: string): { vendor: string; score: number } {
   const p = probe.toLowerCase();
@@ -211,6 +338,12 @@ const ICON = {
   globe:
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 3 2.6 15 0 18M12 3c-2.6 3-2.6 15 0 18"/></svg>',
   type: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6V5h14v1M12 5v14M9 19h6"/></svg>',
+  typeBox:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.6 15.5 12 8l3.4 7.5M9.8 13h4.4"/></svg>',
+  compass:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.2 8.8-1.7 4.7-4.7 1.7 1.7-4.7z"/></svg>',
+  phone:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 17.5h2"/></svg>',
   sliders:
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16M4 16h16"/><circle cx="9" cy="8" r="2.2"/><circle cx="15" cy="16" r="2.2"/></svg>',
   smile:
@@ -218,12 +351,15 @@ const ICON = {
 };
 
 export const SIGNALS: SignalDef[] = [
-  { id: 'timezone', weight: 30, claudeUsed: true, icon: ICON.clock, detect: detectTimezone },
-  { id: 'language', weight: 24, icon: ICON.globe, detect: detectLanguage },
-  { id: 'fonts', weight: 20, icon: ICON.type, detect: detectFonts },
-  { id: 'intlLocale', weight: 10, icon: ICON.sliders, detect: detectIntlLocale },
-  { id: 'timezoneOffset', weight: 8, icon: ICON.clockOffset, detect: detectTimezoneOffset },
-  { id: 'emoji', weight: 8, icon: ICON.smile, detect: detectEmoji },
+  { id: 'timezone', weight: 26, claudeUsed: true, icon: ICON.clock, detect: detectTimezone },
+  { id: 'language', weight: 20, icon: ICON.globe, detect: detectLanguage },
+  { id: 'fonts', weight: 16, icon: ICON.type, detect: detectFonts },
+  { id: 'vendorFonts', weight: 10, icon: ICON.typeBox, detect: detectVendorFonts },
+  { id: 'cnBrowser', weight: 8, icon: ICON.compass, detect: detectCnBrowser },
+  { id: 'deviceVendor', weight: 6, icon: ICON.phone, detect: detectDeviceVendor },
+  { id: 'intlLocale', weight: 6, icon: ICON.sliders, detect: detectIntlLocale },
+  { id: 'timezoneOffset', weight: 4, icon: ICON.clockOffset, detect: detectTimezoneOffset },
+  { id: 'emoji', weight: 4, icon: ICON.smile, detect: detectEmoji },
 ];
 
 export type RiskBand = 'low' | 'medium' | 'high';

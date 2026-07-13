@@ -117,4 +117,27 @@ export const SPONSORS: Sponsor[] = [
       en: 'Shop now',
     },
   },
+  {
+    id: 'nexkj',
+    name: 'Nex科技',
+    url: {
+      zh: 'https://nexkj.net',
+      en: 'https://nexkj.net/en/',
+    },
+    logo: '/sponsors/nexkj-wordmark-340x108.png',
+    logoWidth: 340,
+    logoHeight: 108,
+    headline: {
+      zh: '打造企业级互联网出海增长引擎。',
+      en: 'Enterprise growth stack for global expansion.',
+    },
+    tagline: {
+      zh: '代理IP、指纹浏览器、短信接码、AI 社媒 SCRM 与 GPU 算力，一站式全球化增长能力',
+      en: 'Proxy IP, anti-detect browser, SMS verification, AI SCRM & GPU compute — one integrated system for going global',
+    },
+    cta: {
+      zh: '了解更多',
+      en: 'Learn more',
+    },
+  },
 ];

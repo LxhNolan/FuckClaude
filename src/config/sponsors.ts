@@ -26,34 +26,11 @@ export interface Sponsor {
 
 export const SPONSORS: Sponsor[] = [
   {
-    id: 'ergou',
-    name: '二狗 API',
-    url: {
-      zh: 'https://ergouapi.com/r/gh-fuckclaude',
-      en: 'https://ergouapi.com/r/gh-fuckclaude',
-    },
-    logo: '/sponsors/ergou-wordmark-340x112.png',
-    logoWidth: 340,
-    logoHeight: 112,
-    headline: {
-      zh: '接入二狗，稳如老狗。',
-      en: 'The rock-solid AI API gateway.',
-    },
-    tagline: {
-      zh: '全站 0.1x~0.2x 超低倍率，Claude/GPT/Gemini 等 100% 纯血大模型接口，顶级 IPLC 线路稳定低延迟',
-      en: 'Ultra-low 0.1x–0.2x rates for 100% genuine Claude / GPT / Gemini endpoints over premium IPLC routes',
-    },
-    cta: {
-      zh: '快来试试',
-      en: 'Try it now',
-    },
-  },
-  {
     id: 'roxy',
     name: 'Roxy浏览器',
     url: {
-      zh: 'https://roxybrowser.cn/invite/0326196A',
-      en: 'https://roxybrowser.com/invite/0326196A',
+      zh: 'https://roxybrowser.cn/invite/A4YZ2O',
+      en: 'https://roxybrowser.cn/invite/A4YZ2O',
     },
     logo: '/sponsors/roxy-wordmark.jpg',
     logoWidth: 500,
@@ -69,52 +46,6 @@ export const SPONSORS: Sponsor[] = [
     cta: {
       zh: '免费使用',
       en: 'Use for free',
-    },
-  },
-  {
-    id: 'geek2api',
-    name: 'Geek2API',
-    url: {
-      zh: 'https://hk.geek2api.com?ref=fuckclaude',
-      en: 'https://hk.geek2api.com?ref=fuckclaude',
-    },
-    logo: '/sponsors/geek2api-wordmark-340x108.jpg',
-    logoWidth: 340,
-    logoHeight: 108,
-    headline: {
-      zh: '高校企业都在选择的超低倍率中转站。',
-      en: 'The ultra-low-rate AI gateway universities & enterprises pick.',
-    },
-    tagline: {
-      zh: 'Claude / GPT / Gemini / Image2 全模型接入，可开发票',
-      en: 'Full Claude / GPT / Gemini / Image2 access, invoices available',
-    },
-    cta: {
-      zh: '立即体验',
-      en: 'Try it now',
-    },
-  },
-  {
-    id: 'hanhui',
-    name: '瀚慧AI',
-    url: {
-      zh: 'https://shop.aishop.chat/',
-      en: 'https://shop.aishop.chat/',
-    },
-    logo: '/sponsors/hanhui-wordmark.png',
-    logoWidth: 328,
-    logoHeight: 104,
-    headline: {
-      zh: 'Claude / GPT / Gemini 会员充值，正规可开票。',
-      en: 'Claude / GPT / Gemini subscriptions, legit & invoiceable.',
-    },
-    tagline: {
-      zh: '海外 AI 会员订阅、续费、升级服务，稳定交付，售后跟进，企业/高校/个人更省心',
-      en: 'Overseas AI membership subscribe, renew & upgrade — reliable delivery with after-sales support for enterprises, universities & individuals',
-    },
-    cta: {
-      zh: '立即选购',
-      en: 'Shop now',
     },
   },
   {
@@ -134,6 +65,29 @@ export const SPONSORS: Sponsor[] = [
     tagline: {
       zh: '覆盖 200+ 国家，50 万+ 活跃号码，无需 KYC，支持 ChatGPT / Telegram / WhatsApp 等上万种平台',
       en: '200+ countries, 500k+ active numbers, no KYC — supports ChatGPT, Telegram, WhatsApp & 10k+ platforms',
+    },
+    cta: {
+      zh: '免费体验',
+      en: 'Try free',
+    },
+  },
+  {
+    id: 'flashrent',
+    name: 'FlashRent',
+    url: {
+      zh: 'https://www.energy-rent.work/',
+      en: 'https://www.energy-rent.work/',
+    },
+    logo: '/sponsors/flashrent-wordmark.png',
+    logoWidth: 340,
+    logoHeight: 126,
+    headline: {
+      zh: 'FlashRent 波场能量租用，USDT 转账省手续费高达 80%。',
+      en: 'FlashRent TRON energy rental, save up to 80% on USDT transfer gas.',
+    },
+    tagline: {
+      zh: '一键秒级到账，无需冻结 TRX，支持单笔租用、批量派发与 Telegram Bot 集成',
+      en: 'Instant delegation without freezing TRX — supports single rentals, bulk orders, and Telegram bot integration',
     },
     cta: {
       zh: '免费体验',

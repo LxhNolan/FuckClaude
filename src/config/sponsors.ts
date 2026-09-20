@@ -71,4 +71,27 @@ export const SPONSORS: Sponsor[] = [
       en: 'Try free',
     },
   },
+  {
+    id: 'agentearth',
+    name: 'AgentEarth',
+    url: {
+      zh: 'https://agentearth.ai/login?mode=register&ref_code=Ot7RhpNk',
+      en: 'https://agentearth.ai/login?mode=register&ref_code=Ot7RhpNk',
+    },
+    logo: '/sponsors/agentearth-wordmark.png',
+    logoWidth: 360,
+    logoHeight: 120,
+    headline: {
+      zh: '新用户注册即赠 5,000 积分（价值 $5）',
+      en: 'Sign up to get 5,000 credits ($5 value) free',
+    },
+    tagline: {
+      zh: '1,400+ 专业 API 工具库，MCP & Skill 协议一键接入',
+      en: '1,400+ pro APIs for AI Agents — ready via MCP & Skill',
+    },
+    cta: {
+      zh: '立即注册',
+      en: 'Sign up free',
+    },
+  },
 ];

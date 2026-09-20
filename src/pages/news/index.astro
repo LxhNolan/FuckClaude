@@ -4,11 +4,36 @@ import LangToggle from '../../components/LangToggle.astro';
 import SocialLinks from '../../components/SocialLinks.astro';
 import Footer from '../../components/Footer.astro';
 import ClaudeNews from '../../components/ClaudeNews.astro';
+import CommunityPosts from '../../components/CommunityPosts.astro';
 import { useTranslations } from '../../i18n/ui';
 
 const lang = 'en';
 const t = useTranslations(lang);
 const home = '/';
+const guidesHub = '/guides/';
+const newsHub = '/news/';
+
+const site = Astro.site ?? new URL('https://fuck-claude.vercel.app');
+const currentUrl = new URL(newsHub, site).href;
+const homeUrl = new URL(home, site).href;
+
+const breadcrumbJsonLd = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: t('nav.home'),
+      item: homeUrl,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: t('news.title'),
+      item: currentUrl,
+    },
+  ],
+};
 ---
 
 <BaseLayout
@@ -19,6 +44,7 @@ const home = '/';
   enPath="/news/"
   zhPath="/zh/news/"
   omitFaq
+  jsonLdExtra={breadcrumbJsonLd}
 >
   <header class="nav">
     <div class="wrap nav__inner">
@@ -37,7 +63,8 @@ const home = '/';
       </a>
       <nav class="nav__actions">
         <a class="nav__link" href={home}>{t('nav.home')}</a>
-        <a class="nav__link" href="/guides/">{t('nav.guides')}</a>
+        <a class="nav__link" href={guidesHub}>{t('nav.guides')}</a>
+        <a class="nav__link" href={newsHub} aria-current="page">{t('nav.news')}</a>
         <LangToggle lang={lang} />
         <SocialLinks lang={lang} />
       </nav>
@@ -46,13 +73,24 @@ const home = '/';
 
   <main class="wrap">
     <section class="news-hero">
-      <a class="back-link" href={home}>{t('news.backHome')}</a>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href={home}>{t('nav.home')}</a></li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page">{t('news.title')}</li>
+        </ol>
+      </nav>
+
       <h1>{t('news.title')}</h1>
       <p class="news-sub">{t('news.sub')}</p>
       <p class="news-note">{t('news.note')}</p>
     </section>
 
     <ClaudeNews lang={lang} />
+
+    <div id="community-posts" style="scroll-margin-top: 80px;">
+      <CommunityPosts lang={lang} />
+    </div>
   </main>
 
   <Footer lang={lang} />
@@ -60,16 +98,27 @@ const home = '/';
 
 <style>
   .news-hero {
-    padding: 36px 0 12px;
+    padding: 36px 0 16px;
   }
-  .back-link {
-    display: inline-block;
+  .breadcrumb {
     margin-bottom: 12px;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
+  }
+  .breadcrumb ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted-2);
+  }
+  .breadcrumb a {
     color: var(--muted);
     font-weight: 600;
   }
-  .back-link:hover {
+  .breadcrumb a:hover {
     color: var(--accent-strong);
   }
   .news-hero h1 {

@@ -10,6 +10,7 @@ import CnModels from './CnModels.astro';
 import SocialLinks from './SocialLinks.astro';
 import Footer from './Footer.astro';
 import ClaudeNews from './ClaudeNews.astro';
+import CommunityPosts from './CommunityPosts.astro';
 
 interface Props {
   lang: Lang;
@@ -267,6 +268,10 @@ const apiExamples = [
 
   <section id="news-sec">
     <ClaudeNews lang={lang} limit={3} showMoreLink />
+  </section>
+
+  <section id="community-sec">
+    <CommunityPosts lang={lang} limit={3} showMoreLink />
   </section>
 
   <section id="guides-sec" aria-labelledby="guides-title">

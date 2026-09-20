@@ -20,6 +20,7 @@ export const ui = {
     'nav.title': 'Fuck Claude',
     'nav.guides': 'Anti-Ban Guides',
     'nav.news': 'News',
+    'nav.about': 'About',
     'nav.home': 'Home',
 
     'news.title': 'Claude Latest News',
@@ -30,6 +31,15 @@ export const ui = {
     'news.backHome': '← Back to Home',
     'news.viewAll': 'View all news',
     'news.source': 'Source',
+
+    'community.title': 'Community Anti-Ban Field Reports',
+    'community.sub':
+      'Real-world tips from X (Twitter) on Claude bans, appeals, payments, and Claude Code — curated with direct links to original posts.',
+    'community.viewAll': 'View all field reports',
+    'community.takeaway': 'Takeaway:',
+    'community.viewOnX': 'View original on X (Twitter)',
+    'community.externalHint': 'Opens external link in a new tab',
+
     'credit': 'Built with Claude Fable 5',
 
     'guides.title': 'Claude Anti-Ban & Safety Knowledge Base',
@@ -197,9 +207,12 @@ export const ui = {
     'trust.privacy.title': 'Privacy Policy',
     'trust.privacy.description':
       'How Fuck Claude handles local scans, Google Analytics, Google AdSense, and WebRTC STUN probing.',
+    'trust.terms.title': 'Terms of Service',
+    'trust.terms.description':
+      'Terms and conditions governing the educational and technical use of Fuck Claude.',
     'trust.about.title': 'About',
     'trust.about.description':
-      'Who runs Fuck Claude, why it exists, and its relationship to Anthropic.',
+      'Who runs Fuck Claude, why it exists, editorial standards, and its relationship to Anthropic.',
     'trust.contact.title': 'Contact',
     'trust.contact.description':
       'Reach LinXiaoTao by email, GitHub Issues, or social media.',
@@ -216,6 +229,7 @@ export const ui = {
       'Open sourced under the MIT License — redistributions must keep the original project notice.',
     'footer.repo': 'Original project',
     'footer.privacy': 'Privacy',
+    'footer.terms': 'Terms',
     'footer.about': 'About',
     'footer.contact': 'Contact',
 
@@ -244,6 +258,10 @@ export const ui = {
     'ui.claudeBadge': 'Claude Same',
     'ui.retest': 'Scan again',
     'ui.start': 'Start scan',
+
+    'banner.prompt': 'Choose another language to browse content adapted for your browser language preference.',
+    'banner.continue': 'Continue',
+    'banner.dismiss': 'Close',
   },
 
   zh: {
@@ -254,6 +272,7 @@ export const ui = {
     'nav.title': 'Fuck Claude',
     'nav.guides': '防封指南',
     'nav.news': '最新动态',
+    'nav.about': '关于本站',
     'nav.home': '首页',
 
     'news.title': 'Claude 最新动态',
@@ -264,6 +283,15 @@ export const ui = {
     'news.backHome': '← 返回首页',
     'news.viewAll': '查看全部动态',
     'news.source': '来源',
+
+    'community.title': '社区防封实战精选',
+    'community.sub':
+      '来自 X (Twitter) 的 Claude 封号、申诉、支付与 Claude Code 第一手经验，附原文直达链接与实战避坑提炼。',
+    'community.viewAll': '查看全部实战帖',
+    'community.takeaway': '实战要点：',
+    'community.viewOnX': '在 X (Twitter) 查看原文',
+    'community.externalHint': '将在新标签页打开外部链接',
+
     'credit': '此网站使用 Claude Fable 5 开发',
 
     'guides.title': 'Claude 防封避坑与环境纯化资料库',
@@ -427,8 +455,11 @@ export const ui = {
     'trust.privacy.title': '隐私政策',
     'trust.privacy.description':
       'Fuck Claude 如何处理本地检测、Google Analytics、Google AdSense 与 WebRTC STUN 探测。',
+    'trust.terms.title': '服务条款',
+    'trust.terms.description':
+      '使用 Fuck Claude 诊断工具与知识库的法律条款、用户责任与免责声明。',
     'trust.about.title': '关于本站',
-    'trust.about.description': 'Fuck Claude 的运营者、项目目的及其与 Anthropic 的关系。',
+    'trust.about.description': 'Fuck Claude 的运营者、项目目的、编辑准则及其与 Anthropic 的关系。',
     'trust.contact.title': '联系我们',
     'trust.contact.description': '通过电子邮件、GitHub Issues 或社交媒体联系 LinXiaoTao。',
 
@@ -442,6 +473,7 @@ export const ui = {
     'footer.license': '基于 MIT 协议开源 —— 二次发布请保留原项目署名。',
     'footer.repo': 'GitHub 原项目',
     'footer.privacy': '隐私政策',
+    'footer.terms': '服务条款',
     'footer.about': '关于',
     'footer.contact': '联系',
 
@@ -469,6 +501,10 @@ export const ui = {
     'ui.claudeBadge': 'Claude 同款',
     'ui.retest': '重新扫描',
     'ui.start': '开始检测',
+
+    'banner.prompt': '选择另一语言以浏览适用于你浏览器语言偏好的内容。',
+    'banner.continue': '继续',
+    'banner.dismiss': '关闭',
   },
 } as const;
 

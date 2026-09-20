@@ -7,15 +7,25 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const prefix = lang === 'zh' ? '/zh' : '';
+const guidesUrl = lang === 'zh' ? '/zh/guides/' : '/guides/';
+const newsUrl = lang === 'zh' ? '/zh/news/' : '/news/';
 ---
 
 <footer>
   <div class="wrap">
     <p class="footer__disclaimer">{t('footer.disclaimer')}</p>
-    <nav class="footer__links" aria-label="Trust pages">
-      <a href={`${prefix}/privacy/`}>{t('footer.privacy')}</a>
+    <nav class="footer__links" aria-label="Footer navigation">
+      <a href={`${prefix}/`}>{t('nav.home')}</a>
+      <span aria-hidden="true">·</span>
+      <a href={guidesUrl}>{t('nav.guides')}</a>
+      <span aria-hidden="true">·</span>
+      <a href={newsUrl}>{t('nav.news')}</a>
       <span aria-hidden="true">·</span>
       <a href={`${prefix}/about/`}>{t('footer.about')}</a>
+      <span aria-hidden="true">·</span>
+      <a href={`${prefix}/privacy/`}>{t('footer.privacy')}</a>
+      <span aria-hidden="true">·</span>
+      <a href={`${prefix}/terms/`}>{t('footer.terms')}</a>
       <span aria-hidden="true">·</span>
       <a href={`${prefix}/contact/`}>{t('footer.contact')}</a>
     </nav>

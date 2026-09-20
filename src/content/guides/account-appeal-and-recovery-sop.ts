@@ -6,10 +6,14 @@ export const account_appeal_and_recovery_sop_content = {
 <ul>
   <li><strong>IP Region Block (Access Denied / 403):</strong> "Claude is not available in your region". Solution: Your account is fine; update your proxy node to a residential IP in a supported country (US, UK, SG, JP).</li>
   <li><strong>Subscription Forced Refund (Refunded):</strong> Payment failed or card BIN was blacklisted. The account reverts to Free tier or Pro subscription is canceled. Solution: Update payment method with a high-pass US credit card.</li>
-  <li><strong>Account Permanently Disabled (Disabled):</strong> "Your account has been disabled after review". Solution: Submit a formal English appeal via Anthropic Support.</li>
+  <li><strong>Account Permanently Disabled (Disabled):</strong> "Your account has been disabled after review". Solution: Submit a formal English appeal via the dedicated portal at <a href="https://claude.ai/restricted" target="_blank" rel="noopener noreferrer">claude.ai/restricted</a>.</li>
+  <li><strong>API Violation Warning / False Positive:</strong> Organization-level API alerts or suspected misclassification. Solution: Email <a href="mailto:usersafety@anthropic.com">usersafety@anthropic.com</a> with request IDs and usage context.</li>
 </ul>
 
-<h2>2. High-Success English Appeal SOP</h2>
+<h2>2. H1 2026 Transparency Data & Realistic Expectations</h2>
+<p>Anthropic's Transparency Hub (September 2026) reports that in the first half of 2026 alone, <strong>11.4 million</strong> policy-violating accounts were disabled, <strong>398,000</strong> appeals were received, and <strong>42,000</strong> were successfully reinstated — an approximate <strong>10.5% appeal success rate</strong>. Reinstatement is achievable when you provide verifiable legitimate-use proof (software engineering, academic research) and avoid creating replacement accounts while an appeal is pending.</p>
+
+<h2>3. High-Success English Appeal SOP</h2>
 <p>When appealing a disabled account, frame your usage as an overseas business user or legitimate international traveler rather than arguing TOS technicalities:</p>
 
 <h3>Proven English Appeal Email Template</h3>
@@ -31,7 +35,7 @@ Best regards,
 [Your Name]
 [Your Contact Phone / Business Domain]</code></pre>
 
-<h2>3. Subscription Refund & Chargeback SOP</h2>
+<h2>4. Subscription Refund & Chargeback SOP</h2>
 <p>If your account was disabled immediately after paying for Claude Pro or Team:</p>
 
 <ol>
@@ -47,10 +51,14 @@ Best regards,
 <ul>
   <li><strong>IP 节点地区阻断（403 / Access Denied）：</strong> 提示 "Claude is not available in your region"。判定：账号本身安全，仅为当前代理节点被识别为受限地区。解决：切换至支持地区（美国、英国、新加坡、日本）的原生住宅代理节点。</li>
   <li><strong>订阅被迫退款（Refunded）：</strong> 扣款失败或信用卡 BIN 触发风控，Pro 订阅被强行退款取消，账号退回 Free 档。解决：更换高胜率美国虚拟卡重新绑定。</li>
-  <li><strong>账号彻底禁用（Disabled / Suspended）：</strong> 提示 "Your account has been disabled after review"。判定：账号被系统判定违规或触发黑名单。解决：通过 Anthropic 客服提交英文申诉邮件。</li>
+  <li><strong>账号彻底禁用（Disabled / Suspended）：</strong> 提示 "Your account has been disabled after review"。判定：账号被系统判定违规或触发黑名单。解决：访问专用申诉入口 <a href="https://claude.ai/restricted" target="_blank" rel="noopener noreferrer">claude.ai/restricted</a> 填写官方英文申诉表单。</li>
+  <li><strong>API 违规警示 / 误判：</strong> 组织级 API 告警或疑似误分类。解决：发送邮件至 <a href="mailto:usersafety@anthropic.com">usersafety@anthropic.com</a>，附上 request ID 与使用场景说明。</li>
 </ul>
 
-<h2>二、 高成功率英文申诉自救 SOP</h2>
+<h2>二、 2026 上半年透明度数据与合理预期</h2>
+<p>Anthropic Transparency Hub（2026 年 9 月）披露：2026 上半年共封禁 <strong>1140 万</strong>违规账号，收到 <strong>39.8 万</strong>起申诉，成功解封 <strong>4.2 万</strong>起 — 解封率约 <strong>10.5%</strong>。提供可验证的合规用途证明（软件开发、学术研究）且申诉期间不重复建号，有明确解封概率。</p>
+
+<h2>三、 高成功率英文申诉自救 SOP</h2>
 <p>申诉被禁用的账号时，切忌强行辩驳技术细节，建议将场景定位为合法合规的海外跨境业务用户或出差开发人员：</p>
 
 <h3>高成功率英文申诉邮件模板</h3>
@@ -72,7 +80,7 @@ Best regards,
 [你的姓名/拼音]
 [联系电话/公司或项目域名]</code></pre>
 
-<h2>三、 扣款争议与退款处理流程</h2>
+<h2>四、 扣款争议与退款处理流程</h2>
 <p>如果刚充值 Claude Pro / Team 即遭遇封号：</p>
 
 <ol>

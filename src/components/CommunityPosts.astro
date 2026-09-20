@@ -1,0 +1,293 @@
+---
+import { getLatestCommunityPosts, POST_TAGS, type CommunityPostTag } from '../config/community-posts';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  limit?: number;
+  showMoreLink?: boolean;
+}
+
+const { lang, limit, showMoreLink = false } = Astro.props;
+const t = useTranslations(lang);
+const items = getLatestCommunityPosts(limit);
+const newsHub = lang === 'zh' ? '/zh/news/' : '/news/';
+
+function formatDate(iso: string, locale: Lang): string {
+  return new Date(iso).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
+function tagLabel(tag: CommunityPostTag, locale: Lang): string {
+  return POST_TAGS[tag][locale];
+}
+---
+
+<section class="community-block" aria-labelledby="community-block-title">
+  <div class="community-block__head">
+    <div>
+      <h2 id="community-block-title">{t('community.title')}</h2>
+      <p>{t('community.sub')}</p>
+    </div>
+    {
+      showMoreLink && (
+        <a class="nav__link" href={`${newsHub}#community-posts`}>
+          <span>{t('community.viewAll')} →</span>
+        </a>
+      )
+    }
+  </div>
+
+  <ul class="community-list">
+    {
+      items.map((post) => (
+        <li class="community-card">
+          <div class="community-card__top">
+            <div class="community-card__author">
+              <span class="community-card__x-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </span>
+              <div class="community-card__identity">
+                <a
+                  class="community-card__name"
+                  href={post.profileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {post.authorName}
+                </a>
+                <a
+                  class="community-card__handle"
+                  href={post.profileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  @{post.handle}
+                </a>
+              </div>
+            </div>
+            <time class="community-card__date" datetime={post.publishedAt}>
+              {formatDate(post.publishedAt, lang)}
+            </time>
+          </div>
+
+          <h3 class="community-card__title">{post.title[lang]}</h3>
+          <p class="community-card__text">{post.text[lang]}</p>
+
+          <div class="community-card__takeaway">
+            <span class="community-card__takeaway-label">{t('community.takeaway')}</span>
+            <span>{post.takeaway[lang]}</span>
+          </div>
+
+          <div class="community-card__tags">
+            {post.tags.map((tag) => (
+              <span class="community-card__tag" data-tag={tag}>
+                {tagLabel(tag, lang)}
+              </span>
+            ))}
+          </div>
+
+          <div class="community-card__foot">
+            <a
+              class="community-card__link"
+              href={post.postUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('community.viewOnX')} ↗
+            </a>
+            <span class="community-card__hint">{t('community.externalHint')}</span>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .community-block__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .community-block__head h2 {
+    font-family: var(--serif);
+    font-size: 1.55rem;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .community-block__head p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .community-list {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .community-card {
+    padding: 20px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
+  }
+  .community-card:hover {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .community-card__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .community-card__author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .community-card__x-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: #000;
+    color: #fff;
+    flex: none;
+  }
+  .community-card__identity {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .community-card__name {
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--text);
+  }
+  .community-card__name:hover {
+    color: var(--accent-strong);
+    text-decoration: none;
+  }
+  .community-card__handle {
+    font-size: 0.78rem;
+    color: var(--muted-2);
+    font-family: var(--mono);
+  }
+  .community-card__handle:hover {
+    color: var(--accent-strong);
+  }
+  .community-card__date {
+    font-size: 0.78rem;
+    color: var(--muted-2);
+    font-family: var(--mono);
+    flex: none;
+  }
+  .community-card__title {
+    font-size: 1.05rem;
+    margin: 0 0 8px;
+    line-height: 1.35;
+    color: var(--text);
+  }
+  .community-card__text {
+    font-size: 0.92rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0 0 10px;
+  }
+  .community-card__takeaway {
+    margin: 8px 0 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--bg-soft);
+    border-left: 3px solid var(--accent);
+    font-size: 0.86rem;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .community-card__takeaway-label {
+    font-weight: 700;
+    color: var(--accent-strong);
+    margin-right: 4px;
+  }
+  .community-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .community-card__tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-strong);
+    background: var(--accent-soft);
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .community-card__tag[data-tag='payment'] {
+    color: #2f855a;
+    background: rgba(47, 133, 90, 0.1);
+  }
+  .community-card__tag[data-tag='registration'] {
+    color: #2b6cb0;
+    background: rgba(43, 108, 176, 0.1);
+  }
+  .community-card__tag[data-tag='appeal'] {
+    color: #805ad5;
+    background: rgba(128, 90, 213, 0.1);
+  }
+  .community-card__tag[data-tag='infrastructure'] {
+    color: #c05621;
+    background: rgba(192, 86, 33, 0.1);
+  }
+  .community-card__tag[data-tag='claude-code'] {
+    color: #c53030;
+    background: rgba(197, 48, 48, 0.1);
+  }
+  .community-card__tag[data-tag='multi-account'] {
+    color: #2c7a7b;
+    background: rgba(44, 122, 123, 0.1);
+  }
+  .community-card__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+  }
+  .community-card__link {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent-strong);
+  }
+  .community-card__link:hover {
+    text-decoration: underline;
+  }
+  .community-card__hint {
+    font-size: 0.75rem;
+    color: var(--muted-2);
+  }
+</style>

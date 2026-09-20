@@ -4,7 +4,7 @@ export const antiban_essentials_content = {
 
 <h2>1. Account & Payment Safety</h2>
 <ul>
-  <li><strong>One account, one identity stack:</strong> Do not reuse the same virtual-card BIN, phone number, or billing address across multiple Pro accounts within 24 hours. Since Anthropic's Feb 2026 distillation report, linked disables via payment and IP fingerprinting are more aggressively enforced.</li>
+  <li><strong>One account, one identity stack:</strong> Do not reuse the same virtual-card BIN, phone number, or billing address across multiple Pro accounts within 24 hours. Since Anthropic's Feb 2026 distillation report and the Aug 31, 2026 thinking-block replay restrictions, linked disables via payment, IP, and distillation fingerprinting are more aggressively enforced.</li>
   <li><strong>Corporate ownership matters:</strong> Since Sept 2025, entities more than 50% owned by companies headquartered in unsupported regions (e.g. China) are barred — even if incorporated in Singapore or the US.</li>
   <li><strong>Align geography:</strong> Registration IP, billing country, and card BIN should tell a consistent story. A US card with a Singapore IP and a China timezone is a red flag.</li>
   <li><strong>Avoid VoIP numbers:</strong> Use physical SIM or reputable SMS services; many VoIP prefixes fail verification or trigger instant review.</li>
@@ -33,7 +33,7 @@ export const antiban_essentials_content = {
 <h2>4. Usage Patterns & Frequency</h2>
 <ul>
   <li><strong>Warm up new accounts:</strong> Avoid hundreds of API calls or marathon Claude Code sessions on day one. Gradual usage looks more natural than instant max-tier load.</li>
-  <li><strong>Avoid distillation-like patterns:</strong> Narrow, high-volume capability targeting (e.g. thousands of near-identical coding prompts) is now actively flagged. Spread workloads across time and vary prompt structure.</li>
+  <li><strong>Avoid distillation-like patterns:</strong> Narrow, high-volume capability targeting (e.g. thousands of near-identical coding prompts) is now actively flagged. Accounts created after Aug 31, 2026 face stricter thinking-block replay binding — never cache and replay raw thinking blocks. Spread workloads across time and vary prompt structure.</li>
   <li><strong>Separate workloads:</strong> Do not run aggressive scraping, mass account creation, or policy-edge prompts on your primary paid account.</li>
   <li><strong>One device fingerprint per account:</strong> Switching between a China-locale laptop and a US VPS on the same login within hours raises association risk.</li>
   <li><strong>Log and audit:</strong> Keep request volume and error rates visible so 429 spikes are caught before they escalate to review.</li>
@@ -43,7 +43,8 @@ export const antiban_essentials_content = {
 <h2>5. When Something Goes Wrong</h2>
 <ul>
   <li><strong>Diagnose the ban type:</strong> 403 at login (IP/geo), forced refund email (payment mismatch), or full disable (policy) — each needs a different response.</li>
-  <li><strong>Appeal in English with facts:</strong> State legitimate cross-border use (travel, remote work) without admitting ToS violations. Templates in the appeal SOP guide.</li>
+  <li><strong>Appeal via official channels:</strong> Disabled accounts → <a href="https://claude.ai/restricted" target="_blank" rel="noopener noreferrer">claude.ai/restricted</a>; API warnings → usersafety@anthropic.com. H1 2026 data shows ~10.5% appeal success — include verifiable academic/dev-use proof in English.</li>
+  <li><strong>Do not panic-create accounts:</strong> Community reports show successful reinstatements within 1–3 days when appeals are submitted properly. Spinning up replacement accounts while pending raises association risk.</li>
   <li><strong>Fail over gracefully:</strong> Keep a domestic model or local Ollama/One-API route ready so production does not halt during recovery.</li>
 </ul>
 <p>→ Full guide: <a href="/guides/account-appeal-and-recovery-sop/">Account Appeal & Recovery SOP</a> · <a href="/guides/domestic-and-open-source-alternatives/">Domestic Alternatives</a></p>
@@ -56,7 +57,7 @@ export const antiban_essentials_content = {
 
 <h2>一、账号与支付安全</h2>
 <ul>
-  <li><strong>一号一栈：</strong>24 小时内不要在多个 Pro 账号间复用同一虚拟卡 BIN、手机号或账单地址。自 2026 年 2 月蒸馏攻击报告后，支付与 IP 指纹关联封号执行更严。</li>
+  <li><strong>一号一栈：</strong>24 小时内不要在多个 Pro 账号间复用同一虚拟卡 BIN、手机号或账单地址。自 2026 年 2 月蒸馏攻击报告及 8 月 31 日 thinking block 重放限制后，支付、IP 与蒸馏指纹关联封号执行更严。</li>
   <li><strong>企业股权结构：</strong>自 2025 年 9 月起，由不受支持地区（如中国）总部公司直接或间接控股超 50% 的实体一律禁止 — 即使注册在新加坡或美国。</li>
   <li><strong>地理信息一致：</strong>注册 IP、账单国家与卡 BIN 应讲述同一个故事。美国卡 + 新加坡 IP + 中国时区是典型高危组合。</li>
   <li><strong>避开 VoIP 号段：</strong>优先实体 SIM 或口碑接码平台；大量 VoIP 前缀无法过验证或直接触发审核。</li>
@@ -85,7 +86,7 @@ export const antiban_essentials_content = {
 <h2>四、使用模式与频率控制</h2>
 <ul>
   <li><strong>新号先养：</strong>避免注册首日数百次 API 调用或超长 Claude Code 会话。渐进式使用比瞬间打满 tier 更自然。</li>
-  <li><strong>避免蒸馏式流量模式：</strong>窄域高并发（如数千条高度相似的编码 prompt）现已被主动标记。分散请求时间并变化 prompt 结构。</li>
+  <li><strong>避免蒸馏式流量模式：</strong>窄域高并发（如数千条高度相似的编码 prompt）现已被主动标记。2026-08-31 后新建账号对 thinking block 重放绑定更严 — 切勿缓存并重放原始 thinking block。分散请求时间并变化 prompt 结构。</li>
   <li><strong>工作负载分离：</strong>不要在主力付费号上跑 aggressive 爬虫、批量注册或擦边 prompt。</li>
   <li><strong>一账号一设备指纹：</strong>同一登录在几小时内从中国 locale 笔记本切到美国 VPS，关联风险陡增。</li>
   <li><strong>记录与审计：</strong>监控请求量与错误率，在 429 飙升演变为人工审核前及时降速。</li>
@@ -95,7 +96,8 @@ export const antiban_essentials_content = {
 <h2>五、出问题之后怎么办</h2>
 <ul>
   <li><strong>判定封号类型：</strong>登录 403（IP/地区）、被迫退款邮件（支付不匹配）、完全禁用（政策）—— 路径各不相同。</li>
-  <li><strong>用英文申诉、陈述事实：</strong>说明合法的跨境使用场景（出差、远程办公），避免主动承认违反 ToS。申诉信模板见 SOP 指南。</li>
+  <li><strong>走官方申诉通道：</strong>Disabled 账号 → <a href="https://claude.ai/restricted" target="_blank" rel="noopener noreferrer">claude.ai/restricted</a>；API 警示 → usersafety@anthropic.com。2026 上半年解封率约 10.5% — 英文申诉中附上可验证的学术/开发用途证明。</li>
+  <li><strong>勿慌乱重复建号：</strong>社区反馈显示规范申诉后 1–3 个工作日有成功解封案例。申诉 pending 期间新建账号会提高关联封号风险。</li>
   <li><strong>平滑降级：</strong>提前准备国产模型或本地 Ollama/One-API 路由，恢复期间业务不中断。</li>
 </ul>
 <p>→ 完整指南：<a href="/zh/guides/account-appeal-and-recovery-sop/">封号申诉 SOP</a> · <a href="/zh/guides/domestic-and-open-source-alternatives/">国产平替与灾备</a></p>

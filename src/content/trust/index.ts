@@ -1,128 +1,259 @@
 import { SITE_AUTHOR } from '../../config/site';
 
-export type TrustPageId = 'privacy' | 'about' | 'contact';
+export type TrustPageId = 'privacy' | 'about' | 'contact' | 'terms';
 
 export const TRUST_CONTENT: Record<TrustPageId, { en: string; zh: string }> = {
   privacy: {
     en: `
-<h2>Local scan — your data stays on your device</h2>
-<p>Every fingerprint check runs entirely in your browser. Scan results, detected signals, and risk scores are never uploaded to our servers or shared with third parties as part of the scan itself.</p>
+<h2>1. Local Scan Architecture — Zero Data Upload</h2>
+<p>Every client-side fingerprinting and environmental risk test on <strong>Fuck Claude</strong> runs 100% inside your local web browser. Your scan results, detected locale signals, IP observations from WebRTC, and computed risk scores are processed in memory on your device. They are <strong>never uploaded</strong> to our servers, never stored in any remote database, and never shared with or sold to third parties.</p>
 
-<h2>Google Analytics</h2>
-<p>We load Google Analytics (GA4) to collect anonymous page-view statistics — which pages are visited, approximate geography, and browser type. Analytics does not receive your scan results or fingerprint data.</p>
+<h2>2. Google AdSense & Third-Party Advertising Cookies</h2>
+<p>This website uses <strong>Google AdSense</strong> to display advertisements. Google and third-party advertising partners use cookies, web beacons, and similar technologies to serve and personalize ads based on a user's prior visits to this website and other websites across the Internet:</p>
+<ul>
+  <li>Google's use of advertising cookies enables it and its partners to serve ads to users based on their visit to this site and/or other sites on the Internet.</li>
+  <li>Third-party vendors and ad networks may also serve ads on this website.</li>
+  <li>Users may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Google Ads Settings</a>.</li>
+  <li>Alternatively, you can opt out of third-party vendor cookies for personalized advertising by visiting <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">AboutAds.info</a> or <a href="https://www.youronlinechoices.com/" target="_blank" rel="noopener noreferrer">Your Online Choices</a>.</li>
+</ul>
 
-<h2>Google AdSense</h2>
-<p>This site displays ads through Google AdSense. Google and its partners may use cookies or similar technologies to serve ads, measure ad performance, and (depending on your region and ad settings) show personalized or non-personalized advertising. You can manage ad personalization through <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Google Ads Settings</a> or your browser's cookie controls.</p>
+<h2>3. Google Analytics (GA4) & Aggregated Metrics</h2>
+<p>We use Google Analytics 4 (GA4) with IP anonymization enabled to collect aggregate, non-personally identifiable traffic metrics (such as page views, referrer domains, browser user-agent families, and general geographic regions). Google Analytics collects telemetry strictly to help us understand content performance and improve user experience. Analytics telemetry is completely decoupled from the local fingerprint scanner and does not receive your individual scan results.</p>
 
-<h2>WebRTC STUN probing</h2>
-<p>During the optional WebRTC leak check, your browser may briefly connect to a public STUN server to gather ICE candidates. This is standard WebRTC behavior and does not send your full scan report anywhere.</p>
+<h2>4. WebRTC STUN Probing</h2>
+<p>When you run the optional WebRTC leak test, your browser establishes a temporary connection to public STUN (Session Traversal Utilities for NAT) servers to discover local and public ICE candidates. This is a standard, client-initiated WebRTC protocol operation. The discovered candidate strings are evaluated locally within your browser and are not transmitted to our backend.</p>
 
-<h2>Privacy requests</h2>
-<p>For privacy-related questions or requests, contact <a href="mailto:${SITE_AUTHOR.email}">${SITE_AUTHOR.email}</a>.</p>
+<h2>5. User Privacy Rights (GDPR & CCPA / CPRA)</h2>
+<p>We respect international privacy frameworks including the EU/UK General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA / CPRA):</p>
+<ul>
+  <li><strong>Right to Know & Access:</strong> Since we do not collect personal profiles, accounts, or scan logs, we do not hold personal identification records on our visitors.</li>
+  <li><strong>Right to Deletion:</strong> Any local scan state is cleared upon refreshing the page or clearing your browser storage.</li>
+  <li><strong>Do Not Sell My Personal Information:</strong> We do not sell, rent, or trade your personal data. Advertising partners handle cookie preferences through the opt-out links provided above.</li>
+</ul>
+
+<h2>6. Data Security & Storage</h2>
+<p>The website is deployed over secure HTTPS encryption (TLS 1.3). Static assets are served via global edge CDNs. We do not maintain server-side session databases or personal data caches.</p>
+
+<h2>7. Policy Updates & Contact</h2>
+<p>We may update this Privacy Policy periodically to reflect technological changes or regulatory requirements. For privacy inquiries or data rights requests, please contact our data controller at <a href="mailto:${SITE_AUTHOR.email}">${SITE_AUTHOR.email}</a>.</p>
 `.trim(),
     zh: `
-<h2>本地检测 — 数据不离开你的设备</h2>
-<p>所有指纹检测完全在浏览器本地运行。扫描结果、命中信号与风险分数不会作为检测过程的一部分上传到我们的服务器,也不会因此分享给第三方。</p>
+<h2>1. 本地检测架构 — 零数据上传承诺</h2>
+<p><strong>Fuck Claude</strong> 上的所有客户端指纹检测与环境风控评估均 100% 在你的浏览器本地内存中运行。你的检测结果、命中的区域设置信号、WebRTC 探测到的网络信息以及最终计算出的风险分，<strong>绝不会上传</strong>到我们的服务器，不会存入任何远程数据库，更不会分享或出售给任何第三方。</p>
 
-<h2>Google Analytics</h2>
-<p>本站加载 Google Analytics (GA4) 以统计匿名页面访问量 —— 包括访问页面、大致地区与浏览器类型。Analytics 不会收到你的扫描结果或指纹数据。</p>
+<h2>2. Google AdSense 与第三方广告 Cookie 说明</h2>
+<p>本站使用 <strong>Google AdSense</strong> 展示广告。Google 及第三方广告合作伙伴会使用 Cookie、网络信标和类似技术，根据用户对本站及互联网上其他网站的历史访问记录投放与个性化广告：</p>
+<ul>
+  <li>Google 对广告 Cookie 的使用使其及合作伙伴能够根据用户对本网站和/或互联网上其他网站的访问向用户投放广告。</li>
+  <li>第三方广告供应商和广告联盟也可能在本站投放广告。</li>
+  <li>你可以随时访问 <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Google 广告设置</a> 停用个性化广告。</li>
+  <li>你还可以访问 <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">AboutAds.info</a> 或 <a href="https://www.youronlinechoices.com/" target="_blank" rel="noopener noreferrer">Your Online Choices</a> 停用第三方供应商用于个性化广告的 Cookie。</li>
+</ul>
 
-<h2>Google AdSense</h2>
-<p>本站通过 Google AdSense 展示广告。Google 及其合作伙伴可能使用 Cookie 或类似技术投放广告、衡量广告效果,并根据你的地区与广告设置展示个性化或非个性化广告。你可以通过 <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Google 广告设置</a> 或浏览器 Cookie 控制进行管理。</p>
+<h2>3. Google Analytics (GA4) 匿名统计</h2>
+<p>本站加载启用了 IP 匿名化的 Google Analytics 4 (GA4)，用于统计完全匿名的宏观访问数据（如页面浏览量、引荐来源、浏览器类型及粗略国家地区）。这些统计仅用于评估内容质量和优化网站体验。Analytics 系统与本地检测工具完全隔离，不会接收任何具体的扫描结果或设备指纹详情。</p>
 
-<h2>WebRTC STUN 探测</h2>
-<p>在可选的 WebRTC 泄露检测中,浏览器可能短暂连接公共 STUN 服务器以收集 ICE 候选。这是标准 WebRTC 行为,不会将你的完整扫描报告发送到任何地方。</p>
+<h2>4. WebRTC STUN 探测机制</h2>
+<p>在进行可选的 WebRTC 泄露检测时，浏览器会短暂与公共 STUN（NAT 会话周转实用程序）服务器建立握手以发现本地与公网 ICE 候选。这是标准的客户端 WebRTC 探测行为，获取到的候选信息仅在浏览器本地进行对比分析，不会发送至后端服务器。</p>
 
-<h2>隐私相关请求</h2>
-<p>如有隐私相关问题或请求,请联系 <a href="mailto:${SITE_AUTHOR.email}">${SITE_AUTHOR.email}</a>。</p>
+<h2>5. 用户隐私权益（GDPR 与 CCPA / CPRA 合规）</h2>
+<p>我们严格尊重包括欧盟/英国通用数据保护条例（GDPR）与美国加州消费者隐私法案（CCPA / CPRA）在内的全球隐私保护标准：</p>
+<ul>
+  <li><strong>知情权与访问权：</strong>由于本站不设用户账号、不收集个人身份信息、不记录检测日志，我们并不持有任何访问者的个人档案。</li>
+  <li><strong>删除权：</strong>本地扫描状态在刷新网页或清除浏览器缓存后即彻底销毁。</li>
+  <li><strong>不兜售个人信息承诺：</strong>我们绝不兜售、出租或交易用户的个人信息。广告合作伙伴的 Cookie 偏好可通过上方提供的渠道进行自主管理。</li>
+</ul>
+
+<h2>6. 数据安全与传输</h2>
+<p>本站全站强制启用 HTTPS（TLS 1.3）安全传输协议，静态资源由全球边缘 CDN 节点加速分发。我们不设立任何服务端用户会话库或敏感数据持久化组件。</p>
+
+<h2>7. 政策更新与隐私咨询</h2>
+<p>本隐私政策可能会随技术方案迭代或法律法规要求适时修订。如对隐私保护有任何疑问或请求，欢迎通过邮件联系：<a href="mailto:${SITE_AUTHOR.email}">${SITE_AUTHOR.email}</a>。</p>
 `.trim(),
   },
 
   about: {
     en: `
-<h2>Who runs this site</h2>
+<h2>Who We Are</h2>
 <p><strong>${SITE_AUTHOR.name}</strong> — ${SITE_AUTHOR.bio.en}</p>
 
-<h2>What Fuck Claude is</h2>
-<p>Fuck Claude is an open-source, browser-based tool that estimates whether your environment looks like a "Claude China user", based on public reverse-engineering reports of how Claude Code fingerprints traffic. Run it once and it scans ten locale and network signals — timezone, language, installed Chinese fonts, vendor fonts, WebRTC leaks, Chinese browsers and device brands, Intl locale, UTC+8 offset and emoji style — then combines them into a weighted 0–100 risk score with a plain-language verdict. Everything happens in your browser; you can read a full breakdown on the <a href="/">home page</a>.</p>
+<h2>What Fuck Claude Is</h2>
+<p><strong>Fuck Claude</strong> is an open-source technical diagnostic tool and educational knowledge base. It was developed to help software engineers, researchers, and global developers analyze how modern AI client software (specifically Anthropic's Claude Code and Claude web interfaces) inspects system environments and performs locale fingerprinting.</p>
+<p>Through ten distinct browser-accessible signals — including system timezone, language order, Chinese core fonts, hardware vendor fonts, WebRTC candidate leaks, domestic browser engines, device vendor attributes, Intl locale resolution, UTC offset, and emoji glyph metrics — our open scanner provides a transparent, weighted 0–100 risk score and clear debugging recommendations.</p>
 
-<h2>Why this site exists</h2>
-<p>Anthropic does not officially serve mainland China, and a wave of developers who reached Claude through proxies found their accounts silently rate-limited or banned — often without knowing which part of their setup gave them away. The reverse-engineering discovery that Claude Code was encoding a "China user" verdict into its system prompt made the problem concrete but hard to act on for non-experts. This site turns that research into something you can actually check: a one-click scan that shows you, signal by signal, exactly what your environment is leaking.</p>
+<h2>Editorial Standards & Research Methodology</h2>
+<p>All content published on Fuck Claude adheres to rigorous software engineering and technical verification standards:</p>
+<ul>
+  <li><strong>Empirical Reverse-Engineering:</strong> Our guides and scoring weights are grounded in reproducible reverse-engineering analyses of publicly distributed binaries, prompt injection diagnostics, and open-source network captures.</li>
+  <li><strong>Continuous Validation:</strong> When Anthropic publishes updates, modifies model deprecation schedules, adjusts API rate limits, or updates terms of service, our team verifies and updates the corresponding <a href="/guides/">Anti-Ban Guides</a> and <a href="/news/">Claude News</a> archive.</li>
+  <li><strong>Peer Review & Open Source Transparency:</strong> The entire website, detection algorithms, and guide repositories are open source under the MIT License on <a href="${SITE_AUTHOR.githubUrl}/FuckClaude" target="_blank" rel="noopener noreferrer">GitHub</a>. Community feedback and pull requests undergo technical review before merging.</li>
+</ul>
 
-<h2>How we research this</h2>
-<p>The scoring model is built from publicly available reverse-engineering write-ups and community ban reports, not from any insider or official source. Each signal is weighted by how strongly it correlates with the reported mechanism: the system timezone carries the most weight because it maps one-to-one onto Claude's real check, while softer fingerprints like emoji rendering style carry only a few points. When new findings or community reports emerge, the weights and the <a href="/guides/">Anti-Ban Guides</a> are updated to match.</p>
+<h2>Technical Capabilities & Scope Limitations</h2>
+<p>Our browser scanner measures indicators that a client-side web application can legitimately observe. However, it represents an educational simulation rather than Anthropic's proprietary backend risk infrastructure:</p>
+<ul>
+  <li>Anthropic's complete risk engine incorporates server-side signals such as IP autonomous system number (ASN) classification, datacenter vs residential reputation scores, payment-card Bank Identification Number (BIN) velocity, account lifecycle metadata, and token consumption patterns.</li>
+  <li>A clean 0/100 scan score confirms that your client-side browser and OS environment exhibit no obvious leakage tells; it is not an absolute warranty against platform rate limits or administrative account reviews.</li>
+</ul>
 
-<h2>What the tool can and cannot tell you</h2>
-<p>The scan measures only what a web page can see about your browser and operating system. It is a useful proxy, but it is <strong>not</strong> the exact check Anthropic runs. Their real risk model also weighs your IP reputation, payment-card BIN, account age and usage patterns — none of which are visible to a static site. Treat a low score as "no obvious local tells", not as a guarantee against a ban.</p>
+<h2>Open Source & Community Collaboration</h2>
+<p>We believe in open knowledge and software transparency. The project source code is available at <a href="${SITE_AUTHOR.githubUrl}/FuckClaude" target="_blank" rel="noopener noreferrer">${SITE_AUTHOR.github}/FuckClaude</a>. For technical bug reports, algorithm suggestions, or editorial corrections, visit our <a href="/contact/">contact page</a> or submit an issue on GitHub.</p>
 
-<h2>Data & privacy commitment</h2>
-<p>Every scan runs entirely on your device. Detected signals, matched fingerprints and risk scores are never uploaded to our servers as part of the scan, and never sold or shared. The site does load Google Analytics for anonymous page-view statistics and Google AdSense for advertising; neither receives your scan results. The full details are in our <a href="/privacy/">privacy policy</a>.</p>
-
-<h2>Source code</h2>
-<p>The project is open source under the MIT License: <a href="${SITE_AUTHOR.githubUrl}/FuckClaude" target="_blank" rel="noopener noreferrer">${SITE_AUTHOR.github}/FuckClaude</a>. Issues and pull requests are welcome — see the <a href="/contact/">contact page</a> for the fastest ways to reach us.</p>
-
-<h2>Disclaimer</h2>
-<p>This site is <strong>not</strong> affiliated with, endorsed by, or an official product of Anthropic. All content is for educational and reference purposes only, based on publicly available reverse-engineering research — not insider or official documentation. You remain responsible for how you use Claude and for complying with Anthropic's policies and your local laws.</p>
+<h2>Disclaimer of Affiliation</h2>
+<p>Fuck Claude is an independent open-source educational project. It is <strong>not affiliated with, maintained by, authorized by, or endorsed by Anthropic, PBC</strong>. Claude, Claude Code, Anthropic, and associated trademarks belong to Anthropic, PBC.</p>
 `.trim(),
     zh: `
-<h2>网站运营者</h2>
+<h2>网站运营与作者团队</h2>
 <p><strong>${SITE_AUTHOR.name}</strong> — ${SITE_AUTHOR.bio.zh}</p>
 
-<h2>Fuck Claude 是什么</h2>
-<p>Fuck Claude 是一款开源的浏览器工具,基于 Claude Code 如何给流量打指纹的公开逆向报告,估算你的环境是否像「Claude 中国用户」。运行一次,它会扫描十项区域与网络信号 —— 时区、语言、已安装中文字体、厂商字体、WebRTC 泄露、国产浏览器与设备品牌、Intl locale、UTC+8 偏移与 emoji 风格 —— 再加权得出 0–100 的风险分与一句大白话结论。全过程都在你的浏览器里完成;完整拆解可在<a href="/zh/">首页</a>查看。</p>
+<h2>Fuck Claude 项目概述</h2>
+<p><strong>Fuck Claude</strong> 是一套面向开发者与技术研究者的开源诊断工具与深度知识库。项目旨在帮助全球开发者与科研人员深入理解现代 AI 客户端（特别是 Anthropic 的 Claude Code 与 Web 界面）如何对运行环境进行区域指纹识别与风控检测。</p>
+<p>通过检测系统时区、浏览器语言优先级、中文字体集、国产厂商专属字体、WebRTC 候选泄漏、国产浏览器引擎、硬件设备属性、Intl 区域解析、UTC 偏移量以及 Emoji 渲染等十项核心指标，本站提供透明的 0–100 加权风控分值及针对性的纯化配置建议。</p>
 
-<h2>为什么会有这个网站</h2>
-<p>Anthropic 并不正式面向中国大陆提供服务,而一批通过中转访问 Claude 的开发者发现自己的账号被悄悄限流或封禁 —— 却往往不知道到底是配置里的哪一环出卖了自己。当逆向分析揭示 Claude Code 会把「中国用户」的判定编码进 system prompt 时,问题变得具体了,但对非专业用户来说仍然难以下手。本站把这些研究变成你真正能检查的东西:一键扫描,逐项告诉你环境究竟泄露了什么。</p>
+<h2>编辑准则与研究方法论</h2>
+<p>Fuck Claude 知识库与动态资讯遵循严格的软件工程与技术验证准则：</p>
+<ul>
+  <li><strong>实证逆向分析：</strong>所有防封指南与指纹权重均基于公开可复现的二进制逆向分析、Prompt 注入测试及抓包协议分析，杜绝道听途说与虚假信息。</li>
+  <li><strong>持续跟踪与校验：</strong>每当 Anthropic 调整地区政策、上线新模型架构（如 Claude 3.7 Sonnet 混合推理）、推行文本水印或更新 API 速率限制，团队均会第一时间在 <a href="/zh/guides/">防封指南</a> 与 <a href="/zh/news/">最新动态</a> 中同步实测结论与应对策略。</li>
+  <li><strong>开源透明与同行评审：</strong>本站的全部代码、评分算法及指南文稿均在 <a href="${SITE_AUTHOR.githubUrl}/FuckClaude" target="_blank" rel="noopener noreferrer">GitHub</a> 上基于 MIT 协议完全开源，接受全球开发者的共同审查与改进。</li>
+</ul>
 
-<h2>我们如何做研究</h2>
-<p>评分模型取材自公开的逆向分析文章与社区封号反馈,并非来自任何内部或官方渠道。每项信号的权重取决于它与被披露机制的相关强度:系统时区权重最高,因为它与 Claude 的真实判定一一对应;而 emoji 渲染风格这类较弱的指纹只占几分。每当出现新的发现或社区反馈,权重与<a href="/zh/guides/">防封指南</a>都会随之更新。</p>
+<h2>技术范围与能力边界说明</h2>
+<p>本站检测器衡量的是常规 Web 页面所能合法读取的客户端与操作系统特征。开发者需知悉其技术边界：</p>
+<ul>
+  <li>Anthropic 完整的后端风控体系还包括 IP 自治系统（ASN）评级、数据中心与住宅 IP 信誉库、支付卡发卡行 BIN 码与欺诈风控模型、账号注册生命周期及 API 异常调用模式等。</li>
+  <li>获得低风险评分意味着你的客户端本地环境不存在明显的指纹泄露；但这不能替代合规的 IP 质量与正规支付手段，亦不构成对任何第三方账号状态的绝对保证。</li>
+</ul>
 
-<h2>这个工具能告诉你什么、不能告诉你什么</h2>
-<p>扫描只衡量网页能看到的浏览器与操作系统信息。它是一个有用的参考,但<strong>并不是</strong> Anthropic 实际运行的那套检查。他们真实的风控模型还会权衡你的 IP 信誉、支付卡 BIN、账号资历与使用模式 —— 这些静态网站都看不到。请把低分理解为「没有明显的本地破绽」,而非「一定不会被封」的保证。</p>
+<h2>开源协议与社区协作</h2>
+<p>我们坚信开源透明的力量。项目仓库地址：<a href="${SITE_AUTHOR.githubUrl}/FuckClaude" target="_blank" rel="noopener noreferrer">${SITE_AUTHOR.github}/FuckClaude</a>。欢迎通过 <a href="/zh/contact/">联系我们</a> 页面或 GitHub Issues 提交技术探讨、算法优化建议及勘误。</p>
 
-<h2>数据与隐私承诺</h2>
-<p>每一次扫描都完全在你的设备上运行。检测到的信号、命中的指纹与风险分数不会作为扫描的一部分上传到我们的服务器,也不会被出售或分享。网站确实会加载 Google Analytics 统计匿名页面访问量、并通过 Google AdSense 展示广告;二者都不会收到你的扫描结果。完整说明见<a href="/zh/privacy/">隐私政策</a>。</p>
-
-<h2>源代码</h2>
-<p>项目基于 MIT 协议开源:<a href="${SITE_AUTHOR.githubUrl}/FuckClaude" target="_blank" rel="noopener noreferrer">${SITE_AUTHOR.github}/FuckClaude</a>。欢迎提交 Issue 与 PR —— 最快的联系方式见<a href="/zh/contact/">联系页面</a>。</p>
-
-<h2>免责声明</h2>
-<p>本站<strong>与 Anthropic 无任何关联</strong>,未获其背书,亦非官方产品。所有内容仅供教育与参考,基于公开逆向研究 —— 并非内部或官方文档。你仍需为自己如何使用 Claude、以及是否遵守 Anthropic 政策与当地法律负责。</p>
+<h2>独立声明</h2>
+<p>Fuck Claude 为独立的开源技术与教育研究项目，<strong>与 Anthropic, PBC 无任何隶属、赞助、授权或官方关联</strong>。Claude、Claude Code、Anthropic 及其相关标识均为 Anthropic, PBC 的注册商标或许可财产。</p>
 `.trim(),
   },
 
   contact: {
     en: `
-<h2>Get in touch</h2>
-<p>Questions about the scan, a signal that looks wrong, a guide correction, or a sponsorship enquiry — all of it is welcome. Pick whichever channel below fits best; for anything technical, a GitHub Issue gets the fastest and most trackable response.</p>
+<h2>Get in Touch</h2>
+<p>Whether you have technical feedback on detection signals, guide corrections, sponsorship proposals, or general inquiries, we welcome open communication. Please review our preferred channels below to ensure the fastest response.</p>
 
-<h2>Email</h2>
-<p>General inquiries, sponsorship, and privacy requests: <a href="mailto:${SITE_AUTHOR.email}">${SITE_AUTHOR.email}</a>. To help us reply quickly, include what you were doing, which page you were on, and — for a scan question — your browser and operating system.</p>
+<h2>Primary Contact Channels</h2>
+<ul>
+  <li><strong>GitHub Issues (Recommended for Technical Feedback):</strong> For bug reports, fingerprint algorithm improvements, new environment signals, or guide errata, please open an issue at <a href="${SITE_AUTHOR.githubUrl}/FuckClaude/issues" target="_blank" rel="noopener noreferrer">${SITE_AUTHOR.github}/FuckClaude/issues</a>. GitHub provides the fastest turnaround and public tracking.</li>
+  <li><strong>Direct Email:</strong> For general inquiries, privacy notices, collaboration, or sponsorship: <a href="mailto:${SITE_AUTHOR.email}">${SITE_AUTHOR.email}</a>. We endeavor to respond to legitimate inquiries within 48 business hours.</li>
+  <li><strong>Social Platforms:</strong> Connect with the author on <a href="${SITE_AUTHOR.xUrl}" target="_blank" rel="noopener noreferrer">X (Twitter)</a>, Xiaohongshu, Douyin, and Jike. Platform links are available in the top navigation.</li>
+</ul>
 
-<h2>GitHub Issues</h2>
-<p>Bug reports, feature requests, signal-accuracy feedback, and technical discussion: <a href="${SITE_AUTHOR.githubUrl}/FuckClaude/issues" target="_blank" rel="noopener noreferrer">${SITE_AUTHOR.github}/FuckClaude/issues</a>. Because the project is open source, this is also the best place to propose changes or read what others have reported.</p>
+<h2>Guidelines for Reporting Signal Issues</h2>
+<p>To help us diagnose and improve fingerprint accuracy, please include the following technical context when reporting false positives or detection discrepancies:</p>
+<ul>
+  <li>Operating System & Version (e.g., macOS Sequoia 15.3, Windows 11 24H2, Ubuntu 24.04 LTS)</li>
+  <li>Browser & Version (e.g., Chrome 134, Firefox 136, Safari 18)</li>
+  <li>Specific Signal ID (e.g., System timezone, Chinese vendor fonts, WebRTC leak)</li>
+  <li>Observed Output vs Expected Output</li>
+</ul>
 
-<h2>Social</h2>
-<p>Find ${SITE_AUTHOR.name} on <a href="${SITE_AUTHOR.xUrl}" target="_blank" rel="noopener noreferrer">X (Twitter)</a>, Xiaohongshu, Douyin, and Jike — links are in the site header. Social channels are good for quick questions and updates, but please use email or GitHub for anything that needs a paper trail.</p>
-
-<h2>Before you write</h2>
-<p>Many common questions — how the timezone signal works, why the API result differs from the browser scan, and how to lower your score — are already answered on the <a href="/">home page</a> FAQ and throughout the <a href="/guides/">Anti-Ban Guides</a>. It is worth a quick look first.</p>
+<h2>Frequently Answered Topics</h2>
+<p>Before sending an inquiry, please note that common questions regarding timezone mechanics, virtual card BIN selection, API prompt caching, and account appeal templates are comprehensively covered in our <a href="/guides/">Anti-Ban Knowledge Base</a> and homepage FAQ.</p>
 `.trim(),
     zh: `
-<h2>联系我们</h2>
-<p>无论是关于检测的疑问、某项信号看起来不对、指南需要勘误,还是赞助合作 —— 都欢迎。请从下面挑选最合适的渠道;技术类问题走 GitHub Issue 响应最快、也最方便追踪。</p>
+<h2>联系与反馈</h2>
+<p>无论是关于指纹检测算法的技术建议、指南内容勘误、商务与赞助合作，还是普通咨询，我们都非常欢迎。请参考下方渠道以获得最及时的处理。</p>
 
-<h2>电子邮件</h2>
-<p>一般咨询、赞助与隐私请求:<a href="mailto:${SITE_AUTHOR.email}">${SITE_AUTHOR.email}</a>。为便于我们尽快回复,请附上你当时在做什么、在哪个页面,若是检测相关问题,也请说明你的浏览器与操作系统。</p>
+<h2>主要联系渠道</h2>
+<ul>
+  <li><strong>GitHub Issues（技术反馈首选）：</strong>针对 Bug 报告、指纹算法优化、新环境特征补充或指南勘误，请在 <a href="${SITE_AUTHOR.githubUrl}/FuckClaude/issues" target="_blank" rel="noopener noreferrer">${SITE_AUTHOR.github}/FuckClaude/issues</a> 提交 Issue。这是响应最迅速、最透明的沟通方式。</li>
+  <li><strong>官方电子邮件：</strong>一般咨询、隐私合规请求、技术交流与赞助合作，请发送邮件至：<a href="mailto:${SITE_AUTHOR.email}">${SITE_AUTHOR.email}</a>。我们通常会在 48 个工作小时内给予回复。</li>
+  <li><strong>社交平台：</strong>欢迎在 <a href="${SITE_AUTHOR.xUrl}" target="_blank" rel="noopener noreferrer">X (Twitter)</a>、小红书、抖音与即刻关注作者（链接见顶部导航）。</li>
+</ul>
 
-<h2>GitHub Issues</h2>
-<p>Bug 反馈、功能建议、信号准确性反馈与技术讨论:<a href="${SITE_AUTHOR.githubUrl}/FuckClaude/issues" target="_blank" rel="noopener noreferrer">${SITE_AUTHOR.github}/FuckClaude/issues</a>。项目开源,这里也是提出改动、或查看他人已反馈问题的最佳去处。</p>
+<h2>反馈指纹检测问题时的建议</h2>
+<p>为便于我们快速复现和修正检测算法，提交误报或检测异常时建议附带以下环境信息：</p>
+<ul>
+  <li>操作系统及具体版本（例如：macOS Sequoia 15.3、Windows 11 24H2、Ubuntu 24.04）</li>
+  <li>浏览器及内核版本（例如：Chrome 134、Firefox 136、Safari 18）</li>
+  <li>发生异常的具体检测项（如：系统时区、国产厂商字体、WebRTC 泄露等）</li>
+  <li>实际检测值与预期值的差异说明</li>
+</ul>
 
-<h2>社交媒体</h2>
-<p>在 <a href="${SITE_AUTHOR.xUrl}" target="_blank" rel="noopener noreferrer">X(推特)</a>、小红书、抖音与即刻找到 ${SITE_AUTHOR.name} —— 链接见网站顶部导航。社交渠道适合快速提问与获取更新,但需要留痕的事项请走邮件或 GitHub。</p>
+<h2>常见疑问先行解答</h2>
+<p>在致信之前，关于时区判定原理、虚拟卡 BIN 挑选、API Prompt Cache 优化实战以及封号英文申诉模板等问题，在 <a href="/zh/guides/">防封指南知识库</a> 和首页常见问题中均有详尽阐述，建议先查阅参考。</p>
+`.trim(),
+  },
 
-<h2>写信之前</h2>
-<p>很多常见问题 —— 时区信号如何运作、为什么 API 结果与浏览器检测不同、如何降低分数 —— 在<a href="/zh/">首页</a>的常见问题以及<a href="/zh/guides/">防封指南</a>里已有解答,建议先快速看一眼。</p>
+  terms: {
+    en: `
+<h2>1. Acceptance of Terms</h2>
+<p>By accessing or using <strong>Fuck Claude</strong> (the "Website", "Service", or "Tool"), you agree to be bound by these Terms of Service ("Terms") and our <a href="/privacy/">Privacy Policy</a>. If you do not agree to these Terms, please discontinue using the Service immediately.</p>
+
+<h2>2. Educational & Research Purpose</h2>
+<p>Fuck Claude is an independent open-source educational and technical research tool. All tools, risk calculators, fingerprint scanners, and knowledge base articles are published strictly for educational, security auditing, and technical research purposes. Nothing on this website constitutes legal, financial, or commercial advice.</p>
+
+<h2>3. User Responsibility & Compliance</h2>
+<p>You acknowledge and agree that:</p>
+<ul>
+  <li>You are solely responsible for how you configure your local devices, networks, operating systems, and developer environments.</li>
+  <li>You remain solely responsible for your use of third-party AI services (including Anthropic's Claude, Claude Code, and Claude API) and for complying with their applicable Terms of Service, Acceptable Use Policies, and your local laws.</li>
+  <li>Fuck Claude does not guarantee that following any checklist or guide will prevent account suspension, rate-limiting, or administrative action by third-party service providers.</li>
+</ul>
+
+<h2>4. Disclaimer of Warranties</h2>
+<p>THE SERVICE AND ALL CONTENT, SCANNERS, ARTICLES, AND SCRIPTS ARE PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, ACCURACY, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, ERROR-FREE, OR FREE OF HARMFUL COMPONENTS.</p>
+
+<h2>5. Limitation of Liability</h2>
+<p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL THE AUTHORS, MAINTAINERS, OR CONTRIBUTORS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF DATA, LOSS OF PROFITS, ACCOUNT SUSPENSION, OR SERVICE DISRUPTION, ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF OR INABILITY TO USE THE SERVICE OR GUIDES.</p>
+
+<h2>6. Intellectual Property & Open Source Licensing</h2>
+<p>The source code of Fuck Claude is licensed under the <strong>MIT License</strong>. You may inspect, modify, and distribute the code in accordance with the MIT License terms, provided that original copyright notices and permission notices are retained.</p>
+
+<h2>7. Third-Party Trademarks & External Links</h2>
+<p>All third-party trademarks, service marks, product names, and company names mentioned on this Website (including "Claude", "Anthropic", "Google", "Cloudflare") are the property of their respective owners. Mention of third-party products or services does not imply endorsement, affiliation, or sponsorship. We are not responsible for the content, privacy practices, or availability of external third-party websites linked from our pages.</p>
+
+<h2>8. Advertising & Monetization</h2>
+<p>This Website displays third-party advertisements served by Google AdSense to offset server hosting and domain maintenance costs. Advertisements are clearly separated from editorial content. We do not endorse the specific products or services advertised by third-party ad networks.</p>
+
+<h2>9. Modifications to the Terms</h2>
+<p>We reserve the right to revise or update these Terms at any time without prior notice. The updated version will be posted directly on this page with the effective date. Your continued use of the Website following any changes constitutes your acceptance of the modified Terms.</p>
+
+<h2>10. Contact Information</h2>
+<p>If you have any questions or concerns regarding these Terms, please contact us at <a href="mailto:${SITE_AUTHOR.email}">${SITE_AUTHOR.email}</a> or submit an issue via our <a href="${SITE_AUTHOR.githubUrl}/FuckClaude/issues" target="_blank" rel="noopener noreferrer">GitHub repository</a>.</p>
+`.trim(),
+    zh: `
+<h2>1. 条款的接受与确认</h2>
+<p>欢迎访问并使用 <strong>Fuck Claude</strong>（以下简称“本站”、“服务”或“本工具”）。一旦你访问或使用本站，即表示你已充分阅读、理解并同意受本服务条款（以下简称“本条款”）及本站 <a href="/zh/privacy/">隐私政策</a> 的约束。如果你不同意本条款的任何内容，请立即停止使用本站。</p>
+
+<h2>2. 教育与技术研究性质</h2>
+<p>Fuck Claude 是一个独立的开源教育与技术研究项目。本站提供的所有检测工具、风险估算器、指纹扫描脚本及防封知识库文章，仅供技术研究、安全审计与学习参考之用。本站任何内容均不构成法律、财务、合规或商业建议。</p>
+
+<h2>3. 用户责任与合规守则</h2>
+<p>你理解并明确同意：</p>
+<ul>
+  <li>你对自身设备、网络环境、操作系统及开发工具的配置与使用承担全部责任。</li>
+  <li>你对使用第三方 AI 服务（包括 Anthropic 的 Claude、Claude Code 及 Claude API）的行为承担全部责任，并承诺遵守相应服务商的服务条款、使用政策及你所在地区的适用法律法规。</li>
+  <li>本站无法也不保证遵循任何指南或优化建议能够完全避免第三方平台的限流、封号或风控核查。</li>
+</ul>
+
+<h2>4. 免责声明与无担保保证</h2>
+<p>本服务以及所有内容、检测工具、指南文章和代码均按“现状”（AS IS）和“现有”（AS AVAILABLE）的基础提供，不附带任何明示或暗示的保证，包括但不限于对适销性、特定用途适用性、准确性及不侵权的保证。我们不保证服务不会中断、无差错或完全排除潜在漏洞。</p>
+
+<h2>5. 责任限制</h2>
+<p>在适用法律允许的最大范围内，本站作者、维护者或贡献者在任何情况下均不对因使用或无法使用本站服务、工具或指南而引起的任何间接、附带、特殊、后果性或惩罚性损害（包括但不限于数据丢失、利润损失、账号封禁或业务中断）承担赔偿责任。</p>
+
+<h2>6. 知识产权与开源授权</h2>
+<p>Fuck Claude 项目源代码基于 <strong>MIT 开源协议</strong> 发布。你可以在保留原作者版权声明和许可声明的前提下，自由查阅、修改、分发与使用本项目的代码。</p>
+
+<h2>7. 第三方商标与外部链接</h2>
+<p>本站提及的所有第三方商标、服务标志、产品名称和公司名称（包括但不限于 "Claude"、"Anthropic"、"Google"、"Cloudflare" 等）均为其各自所有者的财产。提及这些商标仅用于描述与技术指代，不代表任何隶属、认可、赞助或官方合作关系。对于本站链接的第三方外部网站内容与隐私实践，本站概不负责。</p>
+
+<h2>8. 广告展示与运营说明</h2>
+<p>本站通过 Google AdSense 展示第三方广告以维持服务器与域名基础运维成本。广告内容与本站编辑内容严格区分。我们不对第三方广告网络展示的具体产品或服务做任何形式的背书。</p>
+
+<h2>9. 条款修改与终止</h2>
+<p>我们保留随时修订或更新本服务条款的权利。更新后的条款将直接发布于本页面。你在条款更新后继续使用本站，即视为接受修订后的条款。</p>
+
+<h2>10. 联系与反馈</h2>
+<p>如对本条款有任何疑问，请通过电子邮件联系我们：<a href="mailto:${SITE_AUTHOR.email}">${SITE_AUTHOR.email}</a>，或在 <a href="${SITE_AUTHOR.githubUrl}/FuckClaude/issues" target="_blank" rel="noopener noreferrer">GitHub 仓库</a> 提交 Issue。</p>
 `.trim(),
   },
 };

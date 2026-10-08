@@ -16,8 +16,8 @@ export const regional_access_strategy_content = {
   <tbody>
     <tr>
       <td><strong>Fully Supported</strong></td>
-      <td>US, UK, Canada, Australia, New Zealand, Singapore, Japan</td>
-      <td>Unrestricted API & Web Access</td>
+      <td>For example US, UK, Canada, Australia, New Zealand, Singapore, Japan, Taiwan, India, Brazil. See the <a href="https://www.anthropic.com/supported-countries" target="_blank" rel="noopener noreferrer">full Supported Regions list</a></td>
+      <td>On the Supported Regions list (API and Claude.ai)</td>
       <td>Register directly with local IPs</td>
     </tr>
     <tr>
@@ -28,37 +28,31 @@ export const regional_access_strategy_content = {
     </tr>
     <tr>
       <td><strong>Restricted</strong></td>
-      <td>China (mainland), Russia, Iran, North Korea, Cuba</td>
-      <td>Blocked by Anthropic ToS</td>
-      <td>Use supported-region residential IPs, align billing/phone</td>
-    </tr>
-    <tr>
-      <td><strong>Gray Zone</strong></td>
-      <td>Hong Kong, Macau, Taiwan, India, Brazil</td>
-      <td>Inconsistent access patterns</td>
-      <td>Test access before registration, use stable proxies</td>
+      <td>China (mainland), Hong Kong, Macau, Russia, Iran, North Korea, Cuba</td>
+      <td>Not on the Supported Regions list; account creation from an unsupported location is a listed ban reason</td>
+      <td>Use supported-region residential IPs, align billing/phone. A supported-region exit IP does not make the account eligible, and Hong Kong users reported suspensions from October 1, 2026</td>
     </tr>
   </tbody>
 </table>
 
 <h3>Region Detection Methods</h3>
-<p>Anthropic infers your region through multiple signals:</p>
+<p>Anthropic does not document how it determines your region. These are the signals commonly discussed in community reports, not confirmed rules:</p>
 <ul>
-  <li><strong>IP Geolocation:</strong> Primary signal, resolved via MaxMind or similar IP databases</li>
-  <li><strong>Payment Card BIN:</strong> Card issuing country must match or align with IP country</li>
-  <li><strong>Phone Number Country Code:</strong> SMS verification number reveals likely user location</li>
-  <li><strong>Billing Address:</strong> Must align with card issuing region</li>
+  <li><strong>IP Geolocation:</strong> Widely assumed to be a main signal</li>
+  <li><strong>Payment Card Country:</strong> The billing address must match the card's country of origin (official requirement)</li>
+  <li><strong>Phone Number Country Code:</strong> The SMS verification number suggests a likely location</li>
+  <li><strong>Billing Address:</strong> Must be an eligible billing location (official requirement)</li>
 </ul>
 
 <h2>2. US/UK/SG Registration Best Practices</h2>
-<p>The three most reliable regions for Claude registration. Follow region-specific best practices to maximize success rates:</p>
+<p>Three commonly used supported regions. Keep the IP, timezone, phone, and billing details consistent with the region you choose:</p>
 
 <h3>United States Registration</h3>
 <pre><code># Optimal Configuration for US Registration
 Proxy IP: US residential (Comcast, AT&T, Verizon ASNs)
 Timezone: America/New_York or America/Los_Angeles
 Phone: Real US carrier SIM (+1 area codes: 212, 310, 415, etc.)
-Card: US-issued virtual card with US billing address
+Card: US-issued credit or debit card with US billing address
 Billing Address: Real US residential address matching IP state
 
 # Verification Script
@@ -70,7 +64,7 @@ curl https://ipinfo.io | jq '{ip, city, region, country, org}'
 Proxy IP: UK residential (BT, Virgin Media, Sky ASNs)
 Timezone: Europe/London
 Phone: Real UK carrier SIM (+44)
-Card: UK or EU-issued virtual card
+Card: UK or EU-issued credit or debit card
 Billing Address: Real UK address with valid postcode
 
 # UK Address Validation
@@ -84,8 +78,7 @@ Phone: Singapore carrier SIM (+65)
 Card: Singapore or international card accepted in SG
 Billing Address: Real Singapore address with postal code
 
-# Note: Singapore has lower competition for Claude access
-# Often higher success rates than oversaturated US market</code></pre>
+# Note: Singapore is on the Supported Regions list</code></pre>
 
 <h2>3. EU GDPR Compliance & Data Sovereignty</h2>
 <p>EU users face additional GDPR consent requirements. Anthropic must comply with data processing regulations:</p>
@@ -160,8 +153,8 @@ Thank you,
   <tbody>
     <tr>
       <td><strong>完全支持</strong></td>
-      <td>美国、英国、加拿大、澳大利亚、新西兰、新加坡、日本</td>
-      <td>无限制 API 和网页访问</td>
+      <td>例如美国、英国、加拿大、澳大利亚、新西兰、新加坡、日本、台湾、印度、巴西。完整名单见<a href="https://www.anthropic.com/supported-countries" target="_blank" rel="noopener noreferrer">官方支持地区列表</a></td>
+      <td>在支持地区名单内（API 与 Claude.ai）</td>
       <td>使用本地 IP 直接注册</td>
     </tr>
     <tr>
@@ -172,37 +165,31 @@ Thank you,
     </tr>
     <tr>
       <td><strong>限制地区</strong></td>
-      <td>中国大陆、俄罗斯、伊朗、朝鲜、古巴</td>
-      <td>被 Anthropic 服务条款阻止</td>
-      <td>使用支持地区住宅 IP，对齐账单/手机号</td>
-    </tr>
-    <tr>
-      <td><strong>灰色地带</strong></td>
-      <td>香港、澳门、台湾、印度、巴西</td>
-      <td>访问模式不一致</td>
-      <td>注册前测试访问，使用稳定代理</td>
+      <td>中国大陆、香港、澳门、俄罗斯、伊朗、朝鲜、古巴</td>
+      <td>不在支持地区名单内；「从不受支持的地区创建账户」是官方列明的封禁原因</td>
+      <td>使用支持地区住宅 IP，对齐账单/手机号。支持地区的出口 IP 不会让账号变得合规，2026 年 10 月 1 日起已有香港用户反馈被停用</td>
     </tr>
   </tbody>
 </table>
 
 <h3>地区检测方法</h3>
-<p>Anthropic 通过多个信号推断您的地区：</p>
+<p>Anthropic 没有公开说明如何判断地区。以下是社区反馈中常被讨论的信号，并非已确认的规则：</p>
 <ul>
-  <li><strong>IP 地理位置：</strong> 主要信号，通过 MaxMind 或类似 IP 数据库解析</li>
-  <li><strong>支付卡 BIN：</strong> 卡发行国必须匹配或与 IP 国家一致</li>
-  <li><strong>电话号码国家代码：</strong> 短信验证号码揭示可能的用户位置</li>
-  <li><strong>账单地址：</strong> 必须与卡发行地区一致</li>
+  <li><strong>IP 地理位置：</strong> 普遍认为是主要信号之一</li>
+  <li><strong>支付卡所属国家：</strong> 账单地址必须与发卡国家一致（官方要求）</li>
+  <li><strong>电话号码国家代码：</strong> 短信验证号码可能提示用户所在位置</li>
+  <li><strong>账单地址：</strong> 必须属于受支持的账单地区（官方要求）</li>
 </ul>
 
 <h2>二、 美国/英国/新加坡注册最佳实践</h2>
-<p>Claude 注册最可靠的三个地区。遵循地区特定的最佳实践以最大化成功率：</p>
+<p>三个常用的支持地区。让 IP、时区、手机号和账单信息与所选地区保持一致：</p>
 
 <h3>美国注册</h3>
 <pre><code># 美国注册的最佳配置
 代理 IP：美国住宅（Comcast、AT&T、Verizon ASN）
 时区：America/New_York 或 America/Los_Angeles
 手机号：真实美国运营商 SIM（+1 区号：212、310、415 等）
-卡：美国发行的虚拟卡，美国账单地址
+卡：美国发行的信用卡或借记卡，美国账单地址
 账单地址：与 IP 州匹配的真实美国住宅地址
 
 # 验证脚本
@@ -214,7 +201,7 @@ curl https://ipinfo.io | jq '{ip, city, region, country, org}'
 代理 IP：英国住宅（BT、Virgin Media、Sky ASN）
 时区：Europe/London
 手机号：真实英国运营商 SIM（+44）
-卡：英国或欧盟发行的虚拟卡
+卡：英国或欧盟发行的信用卡或借记卡
 账单地址：带有效邮编的真实英国地址
 
 # 英国地址验证
@@ -228,8 +215,7 @@ curl https://ipinfo.io | jq '{ip, city, region, country, org}'
 卡：新加坡或新加坡接受的国际卡
 账单地址：带邮政编码的真实新加坡地址
 
-# 注意：新加坡 Claude 访问竞争较低
-# 成功率通常高于过度饱和的美国市场</code></pre>
+# 注意：新加坡在官方支持地区名单内</code></pre>
 
 <h2>三、 欧盟 GDPR 合规与数据主权考虑</h2>
 <p>欧盟用户面临额外的 GDPR 同意要求。Anthropic 必须遵守数据处理法规：</p>

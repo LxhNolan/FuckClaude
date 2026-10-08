@@ -59,12 +59,12 @@ export const SPONSORS: Sponsor[] = [
     logoWidth: 500,
     logoHeight: 200,
     headline: {
-      zh: '指纹暴露你是中国用户？',
-      en: 'Fingerprints flagging you as a China user?',
+      zh: '多个账号共用一个浏览器？',
+      en: 'Several accounts in one browser?',
     },
     tagline: {
-      zh: 'Roxy浏览器，一键伪装干净的海外环境，绕过 Claude 风控',
-      en: 'RoxyBrowser fakes a clean overseas environment in one click and slips past Claude risk control',
+      zh: 'Roxy浏览器为每个账号提供独立的浏览器配置文件，Cookie 与本地数据互相隔离',
+      en: 'RoxyBrowser gives each account its own browser profile, with cookies and local data kept separate',
     },
     cta: {
       zh: '免费使用',

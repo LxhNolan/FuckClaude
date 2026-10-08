@@ -222,7 +222,7 @@ async function route(prompt: string) {
 <p>Using alternatives reduces <em>dependence</em> on Claude uptime; it does not immunize a Claude account from policy enforcement. Keep accounts, payments, and environments compliant—see <a href="/guides/account-registration-and-payment-antiban/">registration and payment antiban</a>.</p>
 
 <h3>How do I estimate cost savings?</h3>
-<p>Measure tokens per task type for two weeks on Claude, then replay the same golden set on DeepSeek/Kimi. Most teams see 70–95% savings on test generation and doc tasks; architecture reviews often stay on Claude because human review time dominates.</p>
+<p>Measure tokens per task type for two weeks on Claude, then replay the same golden set on DeepSeek/Kimi. Savings depend on your task mix and the models you compare, so measure them on your own workload instead of relying on a headline figure. Architecture reviews often stay on Claude because human review time dominates.</p>
 
 <h3>What hardware do I need for acceptable local speed?</h3>
 <p>Apple Silicon M2 Pro with 32 GB RAM runs 14B models interactively. NVIDIA RTX 4090 or A5000 class GPUs handle 32B quantizations for small-team shared gateways. CPU-only inference is viable for single-file edits, not for large agent loops.</p>
@@ -452,7 +452,7 @@ async function route(prompt: string) {
 <p>平替降低的是对 Claude 可用性的<strong>依赖</strong>，不能免疫 Claude 账号的策略执行。账号、支付与环境仍需合规，见 <a href="/zh/guides/account-registration-and-payment-antiban/">注册与支付防封</a>。</p>
 
 <h3>如何估算能省多少钱？</h3>
-<p>先在 Claude 上统计两周各任务类型的 token，再用同一 golden set 回放 DeepSeek/Kimi。多数团队在单测与文档任务上可省 70–95%；架构评审往往仍留 Claude，因为人力 Review 时间才是主成本。</p>
+<p>先在 Claude 上统计两周各任务类型的 token，再用同一 golden set 回放 DeepSeek/Kimi。节省多少取决于任务构成和对比的模型，请用自己的工作负载实测，不要依赖笼统的数字。架构评审往往仍留 Claude，因为人力 Review 时间才是主成本。</p>
 
 <h3>本地推理需要什么硬件才「够用」？</h3>
 <p>Apple M2 Pro 32 GB 可交互式跑 14B；NVIDIA RTX 4090 或 A5000 级别 GPU 适合小团队共享 32B 量化网关。纯 CPU 适合单文件小改，不适合大型 Agent 循环。</p>

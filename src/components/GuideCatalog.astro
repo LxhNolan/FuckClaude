@@ -1,0 +1,176 @@
+---
+import { GUIDE_CATEGORIES, GUIDE_CATEGORY_ORDER, LISTED_GUIDES } from '../config/guides';
+import { GUIDE_CONTENT } from '../content/guidesData';
+import { useTranslations, type Lang } from '../i18n/ui';
+import { estimateReadMinutes } from '../utils/guide-html';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const guidePrefix = lang === 'zh' ? '/zh/guides/' : '/guides/';
+
+const groups = GUIDE_CATEGORY_ORDER.map((category) => ({
+  category,
+  guides: LISTED_GUIDES.filter((guide) => guide.category === category),
+})).filter((group) => group.guides.length > 0);
+
+function readTime(slug: string): string {
+  const minutes = estimateReadMinutes(GUIDE_CONTENT[slug][lang], lang);
+  return t('guides.readTime').replace('{n}', String(minutes));
+}
+---
+
+<section class="catalog" data-lang={lang} aria-labelledby="catalog-title">
+  <h2 id="catalog-title">{t('guides.catalog.title')}</h2>
+  <nav class="catalog__nav" aria-label={t('guides.catalog.nav')}>
+    {
+      groups.map((group) => (
+        <a href={`#cat-${group.category}`}>
+          {GUIDE_CATEGORIES[group.category][lang]}
+          <span class="catalog__count">{group.guides.length}</span>
+        </a>
+      ))
+    }
+  </nav>
+
+  {
+    groups.map((group) => (
+      <section class="catalog__group" aria-labelledby={`cat-${group.category}`}>
+        <h3 id={`cat-${group.category}`}>{GUIDE_CATEGORIES[group.category][lang]}</h3>
+        <div class="catalog__grid">
+          {group.guides.map((guide) => (
+            <article class="guide-card">
+              <div class="guide-card__meta">
+                <span class="guide-card__time">{readTime(guide.slug)}</span>
+                <span class="guide-card__time">{guide.updatedAt}</span>
+              </div>
+              <h4>
+                <a href={`${guidePrefix}${guide.slug}/`}>{guide.title[lang]}</a>
+              </h4>
+              <p>{guide.summary[lang]}</p>
+              <a class="guide-card__link" href={`${guidePrefix}${guide.slug}/`}>
+                {t('guides.readMore')} →
+              </a>
+            </article>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</section>
+
+<style>
+  .catalog {
+    padding: 12px 0 40px;
+  }
+  .catalog > h2 {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    margin: 0 0 12px;
+  }
+  .catalog__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .catalog__nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    transition: border-color 0.18s, color 0.18s;
+  }
+  .catalog__nav a:hover {
+    text-decoration: none;
+    color: var(--accent-strong);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  }
+  .catalog__count {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--muted-2);
+  }
+  .catalog__group {
+    padding-top: 20px;
+  }
+  .catalog__group h3 {
+    font-size: 1.1rem;
+    margin: 0 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--border-strong);
+    scroll-margin-top: 80px;
+  }
+  .catalog__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(310px, 100%), 1fr));
+    gap: 20px;
+  }
+  .guide-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    overflow-wrap: anywhere;
+    transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+  }
+  .guide-card:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    box-shadow: var(--shadow-md);
+  }
+  .guide-card__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .guide-card__time {
+    font-size: 0.78rem;
+    color: var(--muted-2);
+    font-family: var(--mono);
+  }
+  .guide-card h4 {
+    font-size: 1.15rem;
+    margin: 0 0 10px;
+    line-height: 1.35;
+  }
+  .catalog[data-lang='zh'] .guide-card h4 {
+    line-height: 1.4;
+  }
+  .guide-card h4 a {
+    color: var(--text);
+  }
+  .guide-card h4 a:hover {
+    color: var(--accent-strong);
+    text-decoration: none;
+  }
+  .guide-card p {
+    font-size: 0.92rem;
+    color: var(--muted);
+    line-height: 1.55;
+    margin: 0 0 18px;
+    flex: 1;
+  }
+  .catalog[data-lang='zh'] .guide-card p {
+    line-height: 1.65;
+  }
+  .guide-card__link {
+    font-size: 0.88rem;
+    font-weight: 650;
+    color: var(--accent-strong);
+  }
+</style>

@@ -26,6 +26,146 @@ export const NEWS_CATEGORIES: Record<NewsCategory, { en: string; zh: string }> =
 
 export const CLAUDE_NEWS: NewsItem[] = [
   {
+    id: 'claude-code-2-1-294-permission-fixes',
+    category: 'product',
+    publishedAt: '2026-10-08',
+    title: {
+      en: 'Claude Code 2.1.292–2.1.294: permission and sandbox fixes, stdio MCP protocol negotiation, prompt-hook fix',
+      zh: 'Claude Code 2.1.292–2.1.294：权限与沙箱修复、stdio MCP 协议协商、prompt hook 修复',
+    },
+    summary: {
+      en: 'Claude Code 2.1.292 fixes several permission bypasses: PreToolUse hook approvals and auto mode skipped the permission prompt for file reads from network (UNC) paths, sandboxed commands could read the staged copies of `/ultrareview` uploads, and a tampered on-disk cache of server-managed settings could switch off the built-in policy plugin while the settings fetch failed. It also makes local (stdio) MCP servers negotiate protocol version 2026-07-28 by default on every install, including Bedrock, Vertex, and Foundry; set `MCP_PROTOCOL_NEGOTIATION=legacy` to opt out. Version 2.1.293 sets Claude Haiku 5.5 as the default Haiku model. Version 2.1.294 fixes `prompt` and `agent` hooks written as instructions (for example "Block commands that…") so they block what they should, and improves how Stop and SubagentStop prompt hooks are judged.',
+      zh: 'Claude Code 2.1.292 修复多处权限绕过：PreToolUse hook 的批准与 auto mode 会跳过网络（UNC）路径文件读取的权限确认；沙箱内命令可读取 `/ultrareview` 上传的暂存副本；服务端托管设置在拉取失败时，被篡改的本地缓存可关闭内置策略插件。该版本还让本地（stdio）MCP 服务器在所有安装环境（含 Bedrock、Vertex、Foundry）默认协商 2026-07-28 协议版本，可用 `MCP_PROTOCOL_NEGOTIATION=legacy` 退回旧行为。2.1.293 将 Claude Haiku 5.5 设为默认 Haiku 模型。2.1.294 修复以指令形式书写的 `prompt` 与 `agent` hook（如「Block commands that…」）未能拦截目标命令的问题，并改进 Stop 与 SubagentStop prompt hook 的判定。',
+    },
+    takeaway: {
+      en: 'If you rely on `prompt` or `agent` hooks to block commands, upgrade to 2.1.294 and re-test them; earlier versions could let blocked commands through when the hook was phrased as an instruction.',
+      zh: '若依赖 `prompt` 或 `agent` hook 拦截命令，请升级到 2.1.294 并重新验证；旧版本在 hook 以指令形式书写时可能放行本应拦截的命令。',
+    },
+    relatedGuideSlug: 'claude-code-and-api-safety',
+    sourceUrl: 'https://code.claude.com/docs/en/changelog',
+    sourceName: 'Anthropic',
+  },
+  {
+    id: 'claude-haiku-5-5-launch',
+    category: 'product',
+    publishedAt: '2026-10-07',
+    title: {
+      en: 'Claude Haiku 5.5 launches at $0.10/$0.50; Sonnet 5.5 cache reads cut to $0.10; Max and Team get monthly API credits',
+      zh: 'Claude Haiku 5.5 发布，定价 $0.10/$0.50；Sonnet 5.5 缓存读取降至 $0.10；Max 与 Team 新增每月 API 额度',
+    },
+    summary: {
+      en: 'Anthropic released Claude Haiku 5.5 (`claude-haiku-5-5`): 1M context, 128k max output, adaptive thinking with an `effort` parameter, and $0.10 input / $0.50 output per MTok for prompts up to 100k tokens ($0.50 / $2.50 above 100k). Anthropic says it costs about 75% less than Haiku 4.5 on average and targets subagents, summarization, compaction, and browser use; Sonnet 5.5 and Opus 5.5 remain the recommended models for complex agentic coding. Code written for Haiku 4.5 can break: manual extended thinking (`budget_tokens`) returns a 400 error, adaptive thinking is on by default, and a new tokenizer counts more tokens for the same text. The same day, Sonnet 5.5 cache reads dropped from $0.20 to $0.10 per MTok, and Claude Max (5x: $100, 20x: $200 per month) and Team (up to $500 per month, pooled) began receiving monthly Claude Platform API credits. The Python and TypeScript SDKs also add beta classes for the browser use and computer use tools.',
+      zh: 'Anthropic 发布 Claude Haiku 5.5（`claude-haiku-5-5`）：1M 上下文、128k 最大输出，支持带 `effort` 参数的 adaptive thinking；100k token 以内的 prompt 定价 $0.10 输入 / $0.50 输出 per MTok，超过 100k 为 $0.50 / $2.50。官方称其平均成本比 Haiku 4.5 低约 75%，面向 subagent、摘要、compaction 与 browser use；复杂 agentic 编程仍推荐 Sonnet 5.5 与 Opus 5.5。为 Haiku 4.5 编写的代码可能失效：手动 extended thinking（`budget_tokens`）返回 400，adaptive thinking 默认开启，新 tokenizer 对相同文本计更多 token。同日，Sonnet 5.5 缓存读取由 $0.20 降至 $0.10 per MTok；Claude Max（5x 每月 $100，20x 每月 $200）与 Team（每月最高 $500，团队共享）开始发放每月 Claude Platform API 额度。Python 与 TypeScript SDK 同时新增 browser use 与 computer use 工具的 beta 类。',
+    },
+    takeaway: {
+      en: 'Move cheap subagent and summarization calls to Haiku 5.5 only after removing `budget_tokens` and re-checking token counts under the new tokenizer. Max and Team admins can claim the API credits following the Help Center article.',
+      zh: '将低成本 subagent 与摘要调用迁到 Haiku 5.5 前，先移除 `budget_tokens`，并按新 tokenizer 重新估算 token 用量。Max 与 Team 管理员可按帮助中心文章领取 API 额度。',
+    },
+    relatedGuideSlug: 'api-advanced-optimization',
+    sourceUrl: 'https://www.anthropic.com/claude-haiku-5-5',
+    sourceName: 'Anthropic',
+  },
+  {
+    id: 'managed-agents-web-fetch-prior-context-oct-2026',
+    category: 'security',
+    publishedAt: '2026-10-07',
+    title: {
+      en: 'Managed Agents `web_fetch` now fetches only URLs already seen in the session',
+      zh: 'Managed Agents 的 `web_fetch` 现仅抓取会话中已出现过的 URL',
+    },
+    summary: {
+      en: 'To reduce data-exfiltration risk, `web_fetch` in Claude Managed Agents fetches only URLs that already appeared in the session: in a user message, in a `web_search` result, or in a page fetched earlier. A URL that appears only in Claude\'s own output, the system prompt, an attached document, or tool output such as `bash`, `read`, or an MCP tool returns a `url_not_in_prior_context` error. Separately, in cloud environments with `limited` networking, `allowed_hosts` now also applies to `web_search` and `web_fetch`. Creating or updating a session fails with a 400 error when an enabled web tool\'s `allowed_domains` has an entry outside `allowed_hosts`. An `allowed_hosts` entry matches one exact host unless it starts with `*.`.',
+      zh: '为降低数据外泄风险，Claude Managed Agents 的 `web_fetch` 只抓取会话中已出现过的 URL：来自用户消息、`web_search` 结果，或此前已抓取的页面。仅出现在 Claude 自身输出、system prompt、附件文档，或 `bash`、`read`、MCP 等工具输出中的 URL，会返回 `url_not_in_prior_context` 错误。另外，在 `limited` 网络的云环境中，`allowed_hosts` 现同时约束 `web_search` 与 `web_fetch`；若已启用的网页工具的 `allowed_domains` 含不在 `allowed_hosts` 内的条目，创建或更新会话将返回 400。`allowed_hosts` 条目只匹配一个确切主机，除非以 `*.` 开头。',
+    },
+    takeaway: {
+      en: 'Send any URL the agent must fetch in a `user.message` event, and list each host in `allowed_hosts` — `docs.example.com` is not covered by `example.com`.',
+      zh: 'Agent 需要抓取的 URL 请放进 `user.message` 事件发送，并在 `allowed_hosts` 中逐个列出主机——`example.com` 不覆盖 `docs.example.com`。',
+    },
+    relatedGuideSlug: 'automation-safety-practices',
+    sourceUrl: 'https://platform.claude.com/docs/en/release-notes/overview',
+    sourceName: 'Anthropic Docs',
+  },
+  {
+    id: 'cyber-verification-program-expanded-oct-2026',
+    category: 'security',
+    publishedAt: '2026-10-06',
+    title: {
+      en: 'Cyber Verification Program expands to three access tiers covering Opus 5.5, Sonnet 5.5, and Mythos 5.1',
+      zh: 'Cyber Verification Program 扩展为三档访问权限，覆盖 Opus 5.5、Sonnet 5.5 与 Mythos 5.1',
+    },
+    summary: {
+      en: 'Anthropic merged Project Glasswing and the Cyber Verification Program (CVP) into one program with three tiers. Defense Access covers SOC and incident-response work, malware reverse engineering, and vulnerability analysis; Anthropic aims to respond within a few days. Red Team Access adds authorized penetration testing and red-teaming for organizations only, with a review of a few weeks; applicants are enrolled in Defense Access in the meantime. Specialized Access has the fewest blocks and is reserved for verified organizations authorized to test systems such as power grids and interbank transfer infrastructure, reviewed together with the US government. Enrolled organizations must allow data retention; Enterprise Frontier Safeguards, planned for later this fall, will allow storage in customer-controlled cloud. Generally available models keep conservative cyber safeguards and still handle code review, patching known issues, and alert triage. Existing CVP members keep their settings and are evaluated automatically for the new models.',
+      zh: 'Anthropic 将 Project Glasswing 与 Cyber Verification Program（CVP）合并为一个三档计划。Defense Access 覆盖 SOC 与事件响应、恶意软件逆向和漏洞分析，官方目标是数日内答复。Red Team Access 在此基础上增加授权渗透测试与红队演练，仅限组织申请，审核需数周，期间先开通 Defense Access。Specialized Access 拦截最少，仅限经验证、获授权测试电网、银行间转账等关键系统的组织，并与美国政府共同审核。入组组织必须允许数据留存；计划于今秋推出的 Enterprise Frontier Safeguards 将支持存放到客户自控云环境。普通可用模型保持保守的网络安全护栏，仍可用于代码审查、修复已知问题与告警分诊。现有 CVP 成员保留当前设置，并自动评估新模型的访问资格。',
+    },
+    takeaway: {
+      en: 'Defensive security work blocked on generally available models is an eligibility question, not a prompt-wording problem: apply for the matching tier instead of rewording requests.',
+      zh: '普通模型上被拦截的防御性安全工作属于资格问题，而非措辞问题：应申请对应档位，而不是反复改写请求。',
+    },
+    relatedGuideSlug: 'claude-steganography-and-risk-model',
+    sourceUrl: 'https://www.anthropic.com/news/cyber-verification-program',
+    sourceName: 'Anthropic',
+  },
+  {
+    id: 'hong-kong-claude-suspensions-oct-2026',
+    category: 'policy',
+    publishedAt: '2026-10-01',
+    title: {
+      en: 'Hong Kong users report Claude account suspensions from Oct 1; Anthropic has not commented',
+      zh: '10 月 1 日起香港用户集中反馈 Claude 账号被停用，Anthropic 尚未回应',
+    },
+    summary: {
+      en: 'From October 1, 2026, Hong Kong users reported "Account Suspended" or "Access Denied" screens on claude.ai, including paid Pro subscribers who had connected through VPN exits in supported regions such as Singapore. Hong Kong, mainland China, and Macau are not on Anthropic\'s Supported Regions list; Taiwan, Singapore, and Japan are. The Help Center lists "account creation from an unsupported location" as a ban reason, and a VPN exit in a supported country does not change eligibility. One posted notice cited suspicious signals and a Usage Policy violation without naming a trigger. Media and community analysis points to shared data-center VPN IPs, virtual-card or unsupported-region payments, and frequent country switching, but Anthropic has not confirmed any of this and the number of affected accounts is unknown. One user reported that a data export returned account information without conversation history; the Help Center says exportable data can be restricted depending on the violation.',
+      zh: '自 2026 年 10 月 1 日起，香港用户反馈 claude.ai 出现「Account Suspended」或「Access Denied」，其中包括通过新加坡等受支持地区 VPN 出口访问的 Pro 付费用户。香港、中国内地与澳门不在 Anthropic 的支持地区名单内，台湾、新加坡、日本在名单内。帮助中心将「从不受支持的地区创建账户」列为封禁原因，VPN 出口位于受支持国家并不改变使用资格。一份公开的停用通知仅提到「可疑信号」与违反使用政策，未说明具体触发条件。媒体与社区分析指向共享机房 VPN IP、虚拟卡或非支持地区支付，以及频繁切换登录国家，但 Anthropic 未确认其中任何一项，受影响账号数量亦未知。有用户反馈数据导出只有账号信息而无对话记录；帮助中心说明，可导出的数据范围可能因违规类型而受限。',
+    },
+    takeaway: {
+      en: 'A supported-country VPN exit does not make an unsupported-region account eligible. If suspended: export data first, appeal with factual details at claude.ai/restricted, and do not register replacement accounts while the appeal is pending.',
+      zh: '受支持国家的 VPN 出口不能让不支持地区的账号变得合规。被停用后：先导出数据，再到 claude.ai/restricted 如实申诉，申诉期间不要另注册新账号。',
+    },
+    relatedGuideSlug: 'regional-access-strategy',
+    sourceUrl: 'https://aistify.com/claude-hong-kong-vpn-account-bans/',
+    sourceName: 'AIstify (citing SCMP)',
+  },
+  {
+    id: 'sonnet-4-5-deprecation-admin-api-ga-sep-2026',
+    category: 'api',
+    publishedAt: '2026-09-30',
+    title: {
+      en: 'Claude Sonnet 4.5 deprecated with Nov 30 retirement; Admin API methods leave beta in SDKs and the `ant` CLI',
+      zh: 'Claude Sonnet 4.5 进入弃用期，11 月 30 日退役；Admin API 在 SDK 与 ant CLI 中转正',
+    },
+    summary: {
+      en: 'Anthropic announced the deprecation of Claude Sonnet 4.5 (`claude-sonnet-4-5-20250929`), with retirement on the Claude API scheduled for November 30, 2026, and recommends migrating to Claude Sonnet 5.5. In Python SDK 1.10.0, TypeScript SDK 0.130.0, C# SDK 12.52.0, Go SDK 1.77.0, Java SDK 2.67.0, PHP SDK 0.53.0, Ruby SDK 1.75.0, and `ant` CLI 1.37.0, the Admin API methods for organization info, members, invites, workspaces, API keys, rate limits, service accounts, workload identity federation, customer-managed encryption keys, and compliance settings are out of beta under `client.organization` and `ant organization`. The beta paths remain available.',
+      zh: 'Anthropic 宣布弃用 Claude Sonnet 4.5（`claude-sonnet-4-5-20250929`），Claude API 上的退役日期定为 2026 年 11 月 30 日，推荐迁移至 Claude Sonnet 5.5。在 Python SDK 1.10.0、TypeScript SDK 0.130.0、C# SDK 12.52.0、Go SDK 1.77.0、Java SDK 2.67.0、PHP SDK 0.53.0、Ruby SDK 1.75.0 与 `ant` CLI 1.37.0 中，组织信息、成员、邀请、工作区、API 密钥、速率限制、服务账号、workload identity federation、客户自管加密密钥与合规设置相关的 Admin API 方法已转正，可通过 `client.organization` 与 `ant organization` 调用；beta 路径继续保留。',
+    },
+    takeaway: {
+      en: 'Replace hard-coded `claude-sonnet-4-5-20250929` before November 30, and read the Sonnet 5.5 migration guide first: `thinking` and forced `tool_choice` behave differently from earlier models.',
+      zh: '请在 11 月 30 日前替换硬编码的 `claude-sonnet-4-5-20250929`，并先阅读 Sonnet 5.5 迁移指南：`thinking` 与强制 `tool_choice` 的行为与旧模型不同。',
+    },
+    relatedGuideSlug: 'api-advanced-optimization',
+    sourceUrl: 'https://platform.claude.com/docs/en/release-notes/overview',
+    sourceName: 'Anthropic Docs',
+  },
+  {
+    id: 'claude-sonnet-5-5-launch',
+    category: 'product',
+    publishedAt: '2026-09-28',
+    title: {
+      en: 'Claude Sonnet 5.5 launches at an unchanged $2/$10, with thinking blocks bound to the account',
+      zh: 'Claude Sonnet 5.5 发布，价格仍为 $2/$10，thinking block 与账号绑定',
+    },
+    summary: {
+      en: 'Anthropic released Claude Sonnet 5.5 (`claude-sonnet-5-5`), the second Claude 5.5 model after Opus 5.5: 1M context, 128k max output, 30%+ faster than Sonnet 5, and up to 30% cheaper on most work because it uses fewer tokens at the same $2 / $10 per MTok. Migrating from Sonnet 5 breaks in five places: up-front thinking is turned off with `thinking: {"type": "between_tools"}` instead of `"disabled"` (at `high` effort or below); `tool_choice` types `any` and `tool` return 400; thinking blocks are tied to the model and conversation; the earlier `computer_20251124` tool is rejected on the Claude API and Google Cloud; and the advisor tool rejects Opus 4.8, Opus 4.7, and Sonnet 5 as advisors. Thinking blocks that Sonnet 5.5 produces work only in the account that produced them or an account linked to it. When another account sends one, the API drops the block before the model sees it and the request still succeeds. Claude Code 2.1.284 makes `sonnet` resolve to Sonnet 5.5 on the Anthropic API.',
+      zh: 'Anthropic 发布 Claude Sonnet 5.5（`claude-sonnet-5-5`），为继 Opus 5.5 之后的第二款 Claude 5.5 模型：1M 上下文、128k 最大输出，速度比 Sonnet 5 快 30% 以上；价格仍为 $2 / $10 per MTok，但同样工作消耗的 token 更少，多数场景成本最高降低约 30%。从 Sonnet 5 迁移有五处不兼容：关闭前置 thinking 需改用 `thinking: {"type": "between_tools"}`（`high` 及以下 effort），不再使用 `"disabled"`；`tool_choice` 的 `any` 与 `tool` 返回 400；thinking block 与模型和会话绑定；旧版 `computer_20251124` 工具在 Claude API 与 Google Cloud 上被拒绝；advisor 工具不再接受 Opus 4.8、Opus 4.7 与 Sonnet 5 作为 advisor。Sonnet 5.5 生成的 thinking block 仅在生成它的账号或与之关联的账号中有效；其他账号发送时，API 会在模型看到之前丢弃该 block，请求本身仍然成功。Claude Code 2.1.284 起，Anthropic API 上的 `sonnet` 别名指向 Sonnet 5.5。',
+    },
+    takeaway: {
+      en: 'An API relay or gateway that rotates several accounts within one conversation can silently lose Sonnet 5.5 thinking blocks. Keep each conversation on a single account.',
+      zh: '在同一会话中轮换多个账号的 API 中转或网关，可能会悄悄丢失 Sonnet 5.5 的 thinking block。请让每个会话固定使用同一个账号。',
+    },
+    relatedGuideSlug: 'multi-account-management',
+    sourceUrl: 'https://www.anthropic.com/claude-sonnet-5-5',
+    sourceName: 'Anthropic',
+  },
+  {
     id: 'claude-code-2-1-283-managed-models',
     category: 'product',
     publishedAt: '2026-09-25',
@@ -227,7 +367,7 @@ export const CLAUDE_NEWS: NewsItem[] = [
   {
     id: 'anthropic-transparency-report-h1-2026',
     category: 'security',
-    publishedAt: '2026-09-04',
+    publishedAt: '2026-07-23',
     title: {
       en: 'Anthropic H1 2026 Transparency Report: 11.4M accounts banned; ~10.5% appeal success rate',
       zh: 'Anthropic 2026 上半年透明度报告：封禁 1140 万账号，申诉解封率约 10.5%',
@@ -241,7 +381,7 @@ export const CLAUDE_NEWS: NewsItem[] = [
       zh: '提供合规学术/开发用途证明的申诉有明确解封概率 — 申诉期间勿慌乱重复建号。',
     },
     relatedGuideSlug: 'account-appeal-and-recovery-sop',
-    sourceUrl: 'https://www.anthropic.com/transparency',
+    sourceUrl: 'https://www.anthropic.com/transparency/system-trust-reporting',
     sourceName: 'Anthropic Transparency Hub',
   },
   {
@@ -644,9 +784,9 @@ export const CLAUDE_NEWS: NewsItem[] = [
   },
 ];
 
-/** Most recent first. */
-export function getLatestNews(limit?: number): NewsItem[] {
-  const sorted = [...CLAUDE_NEWS].sort(
+/** Most recent first, optionally restricted to the given categories. */
+export function getLatestNews(limit?: number, categories?: NewsCategory[]): NewsItem[] {
+  const sorted = CLAUDE_NEWS.filter((item) => !categories || categories.includes(item.category)).sort(
     (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   );
   return limit ? sorted.slice(0, limit) : sorted;

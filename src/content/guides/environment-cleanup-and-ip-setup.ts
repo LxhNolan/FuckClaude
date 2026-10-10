@@ -68,7 +68,7 @@ date
 </table>
 
 <h2>2. Proxy Nodes, Residential IPs & Leak Prevention</h2>
-<p>Anthropic aggressively filters datacenter ASNs. Aligning your IP with a residential ISP in your account's country is the baseline for stable access—not a guarantee against all bans, but a necessary condition to avoid instant blocks. Read the full <a href="/guides/vpn-and-proxy-selection/">VPN & Proxy Selection guide</a> for provider evaluation criteria.</p>
+<p>Community reports suggest datacenter ASNs are blocked more often than residential ISPs. Aligning your IP with a residential ISP in your account's country is the baseline for stable access—not a guarantee against all bans, but a necessary condition to avoid instant blocks. Read the full <a href="/guides/vpn-and-proxy-selection/">VPN & Proxy Selection guide</a> for provider evaluation criteria.</p>
 
 <h3>IP Type Comparison</h3>
 <table>
@@ -237,7 +237,7 @@ date
 </table>
 
 <h2>二、代理节点、住宅 IP 与泄露防护</h2>
-<p>Anthropic 对机房 ASN 过滤极严。使用与账号国家一致的住宅 ISP IP 是稳定访问的基础条件——不能保证永不封号，但可避免因 IP 类型本身导致的即时拦截。服务商评估标准见 <a href="/zh/guides/vpn-and-proxy-selection/">VPN 与代理选择指南</a>。</p>
+<p>社区反馈显示，机房 ASN 比住宅 ISP 更容易被拦截。使用与账号国家一致的住宅 ISP IP 是稳定访问的基础条件——不能保证永不封号，但可避免因 IP 类型本身导致的即时拦截。服务商评估标准见 <a href="/zh/guides/vpn-and-proxy-selection/">VPN 与代理选择指南</a>。</p>
 
 <h3>IP 类型对比</h3>
 <table>

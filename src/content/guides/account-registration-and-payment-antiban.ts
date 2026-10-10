@@ -3,7 +3,7 @@ export const account_registration_and_payment_antiban_content = {
 <h2>1. Phone Verification & Service Provider Selection</h2>
 <p>Anthropic requires phone verification during initial registration and again when login patterns look unusual—new IP ranges, unfamiliar devices, or rapid geographic shifts. The goal is not to "trick" the system but to present a consistent, verifiable identity that matches your declared account region. Virtual VoIP numbers (Google Voice, TextNow, Skype, most SMS-receiving websites) are widely blocked because they are cheap, reusable, and heavily abused.</p>
 
-<p>Decide your account region (US, UK, SG, JP) before registering. Your phone number should plausibly belong to that region for the life of the account.</p>
+<p>Decide your account region (US, UK, SG, JP) before registering. Your phone number should plausibly belong to that region for the life of the account. Pass rates and risk levels in the tables below are community observations, not Anthropic data.</p>
 
 <h3>Physical SIM vs Shared Pool Numbers</h3>
 <table>
@@ -50,12 +50,13 @@ export const account_registration_and_payment_antiban_content = {
   <li><strong>Keep the number active:</strong> If your SIM expires or the rental ends, recovery flows may fail. Store backup codes in a password manager.</li>
 </ul>
 
-<h2>2. Virtual Credit Card BINs & Billing Address Alignment</h2>
-<p>Payment rejections, instant refunds, and "Refunded / Suspended" subscription status are frequently caused by card BIN risk filters and billing mismatches—not because Anthropic "hates" international users, but because fraud models score mismatched signals heavily. Align your payment profile with your account region and current network exit to reduce false positives.</p>
+<h2>2. Card Type, BIN Risk & Billing Address Alignment</h2>
+<p>A declined payment or a refunded subscription can have several causes, and Anthropic does not receive the bank's reason. Billing-address mismatches and unsupported card types are the causes Anthropic itself lists. Align your payment profile with your account region to remove the avoidable ones.</p>
 
-<p>For a deeper platform-by-platform breakdown, see our <a href="/guides/payment-methods-comparison/">Virtual Card Platforms & Payment Methods Comparison</a>. For region-specific registration context, read the <a href="/guides/regional-access-strategy/">Regional Access Strategies guide</a>.</p>
+<p>For what Claude accepts and Anthropic's official decline checklist, see <a href="/guides/payment-methods-comparison/">Claude Payment Methods, Card Risk & Decline Troubleshooting</a>. For region-specific registration context, read the <a href="/guides/regional-access-strategy/">Regional Access Strategies guide</a>.</p>
 
 <h3>Card Type & BIN Risk Overview</h3>
+<p>The risk levels below are community observations, not Anthropic data. Anthropic does not publish which card types or BINs it blocks.</p>
 <table>
   <thead>
     <tr>
@@ -73,7 +74,7 @@ export const account_registration_and_payment_antiban_content = {
     <tr>
       <td>US fintech debit (Chime-class issuers)</td>
       <td>Low–Medium</td>
-      <td>Verify BIN is not over-issued; keep $25+ balance</td>
+      <td>Debit cards are listed as accepted for Pro and Max; keep enough balance for renewals</td>
     </tr>
     <tr>
       <td>International debit from supported country</td>
@@ -83,15 +84,15 @@ export const account_registration_and_payment_antiban_content = {
     <tr>
       <td>Mass-market prepaid / crypto-funded prepaid</td>
       <td>High</td>
-      <td>Frequent instant refund; avoid for primary billing</td>
+      <td>Prepaid cards are not listed for Pro or Max; declines and instant refunds are commonly reported</td>
     </tr>
   </tbody>
 </table>
 
 <ul>
-  <li><strong>Prefer established US Visa/Mastercard BINs:</strong> Examples often cited in community reports include 485932, 532959, and 428803—always verify current status before binding, as issuers change risk tiers over time.</li>
-  <li><strong>Strict address alignment:</strong> Use a real billing address whose state and ZIP code match your proxy or VPN exit region. A California IP with a Texas billing address triggers mismatches even when the card itself is valid.</li>
-  <li><strong>Sufficient balance before binding:</strong> Anthropic may run a small pre-authorization (often around $1). Ensure at least $25 USD available so the hold and first monthly charge both succeed.</li>
+  <li><strong>Prefer cards from established banks:</strong> Anthropic does not publish which BINs it blocks, so BIN lists found online are unverified and go stale as issuers change risk tiers. Choose a credit or debit card from a bank that lets you set the billing address exactly.</li>
+  <li><strong>Billing address:</strong> Anthropic's checklist requires the billing address to match your bank's record and the card's country of origin. Community reports also say that keeping IP country, billing country, and phone country consistent reduces friction. That is an observation, not a documented rule.</li>
+  <li><strong>Enough balance:</strong> Make sure the card covers the first charge and the next renewal. A failed renewal can drop the account to the Free plan.</li>
   <li><strong>One card, one primary identity:</strong> Do not rotate cards weekly on the same account. Stable payment instruments build trust; chaotic changes look like account takeover.</li>
 </ul>
 
@@ -100,7 +101,7 @@ export const account_registration_and_payment_antiban_content = {
   <li>Clean browser profile aligned with target region (see <a href="/guides/environment-cleanup-and-ip-setup/">Environment Cleanup guide</a>).</li>
   <li>Residential IP from the same country as billing address (see <a href="/guides/vpn-and-proxy-selection/">VPN & Proxy Selection</a>).</li>
   <li>Fresh or dedicated phone number—not from a public SMS pool.</li>
-  <li>Virtual or physical card with low-risk BIN and matching billing ZIP.</li>
+  <li>A credit or debit card whose billing address matches your bank's record.</li>
   <li>Enable 2FA and download backup codes before closing the session.</li>
 </ol>
 
@@ -121,7 +122,7 @@ python3 -c "import json; d=json.load(open('.claude.json')); print(d.get('oauthAc
 
 <h3>What NOT to Do</h3>
 <ul>
-  <li>Do not use chargebacks to dispute legitimate Pro charges—you will lose both payment access and the account.</li>
+  <li>Do not open a bank dispute before using Anthropic's refund request. Anthropic has not published how disputes affect an account, and you may lose payment access.</li>
   <li>Do not buy "pre-made" Claude accounts from marketplaces; they carry inherited bans and stolen payment links.</li>
   <li>Do not register from a datacenter IP and bind a US card with a mismatched billing country on the same session.</li>
   <li>Do not disable 2FA to "simplify" logins; it increases SMS re-verification triggers on new IPs.</li>
@@ -130,7 +131,7 @@ python3 -c "import json; d=json.load(open('.claude.json')); print(d.get('oauthAc
 <h2>FAQ</h2>
 
 <h3>Why did my subscription show "Refunded" immediately after payment?</h3>
-<p>Usually the payment processor reversed the charge due to BIN risk, AVS (address verification) failure, or velocity limits on the card. Fix billing address alignment, try a different low-risk BIN, and ensure your IP region matches before retrying. Wait 24–48 hours between attempts on the same account.</p>
+<p>Anthropic does not receive the bank's reason for a decline, so the cause is not always known. Common candidates are a billing-address mismatch, a card type that is not accepted, or a failed 3D Secure check. Work through the <a href="/guides/payment-methods-comparison/">official decline checklist</a>, then retry once instead of repeatedly on the same account.</p>
 
 <h3>Can I use the same Google Voice number I use for other services?</h3>
 <p>No. VoIP numbers are blocked at verification time in most cases. Use a carrier-issued mobile number or a dedicated rental that is not publicly indexed.</p>
@@ -142,13 +143,13 @@ python3 -c "import json; d=json.load(open('.claude.json')); print(d.get('oauthAc
 <p>After. Complete environment and IP alignment first (<a href="/guides/device-setup-guide/">Device Setup Guide</a>), then register, verify phone, bind payment, and enable 2FA in a single consistent session without switching regions mid-flow.</p>
 
 <h3>My card works on other SaaS sites but fails on Claude—why?</h3>
-<p>Anthropic uses stricter fraud rules than many merchants. Prepaid BINs, billing country mismatches, and cards previously associated with refunded Claude charges are common causes. Consult the <a href="/guides/payment-methods-comparison/">payment methods comparison</a> for issuer-specific notes.</p>
+<p>Check Anthropic's list first: an eligible billing location, an exact billing-address match, completed 3D Secure, and a credit or debit card type. A prepaid card can be declined on Pro and Max because only credit and debit cards are listed. See the <a href="/guides/payment-methods-comparison/">payment methods guide</a>.</p>
 `,
   zh: `
 <h2>一、手机号验证与接码服务商选择</h2>
 <p>Anthropic 在首次注册、异地登录或设备/IP 变动时都会触发手机验证。验证的目的不是「绕过系统」，而是让账号呈现与所选地区一致、可核查的身份信息。Google Voice、TextNow、Skype 以及多数免费接码平台的 VoIP 号段已被大规模拦截——这类号码成本低、可重复使用、滥用率高，风控模型会直接拒绝。</p>
 
-<p>注册前先确定账号归属地区（美、英、新、日等）。手机号应在整个订阅周期内都能合理解释为该地区的长期号码。</p>
+<p>注册前先确定账号归属地区（美、英、新、日等）。手机号应在整个订阅周期内都能合理解释为该地区的长期号码。下表的通过率与风险等级是社区观察，不是 Anthropic 的数据。</p>
 
 <h3>实体 SIM 与公共号池对比</h3>
 <table>
@@ -195,12 +196,13 @@ python3 -c "import json; d=json.load(open('.claude.json')); print(d.get('oauthAc
   <li><strong>保持号码有效：</strong> SIM 停机或接码租约到期会导致找回流程失败，务必将备份恢复码存入密码管理器。</li>
 </ul>
 
-<h2>二、虚拟信用卡 BIN 与账单地址对齐</h2>
-<p>订阅被拒、扣款后立即 Refunded / Suspended，多数源于卡头（BIN）风控或账单信息不一致——并非平台针对国际用户，而是欺诈模型对「信号不匹配」打分极高。将支付资料与账号地区、当前网络出口对齐，可有效降低误杀概率。</p>
+<h2>二、卡类型、BIN 风险与账单地址对齐</h2>
+<p>扣款被拒或订阅被退款可能有多种原因，而且 Anthropic 收不到银行给出的具体原因。账单地址不一致和卡类型不被接受，是 Anthropic 官方列出的原因。让支付资料与账号地区保持一致，可以排除其中可避免的部分。</p>
 
-<p>各虚拟卡平台差异详见 <a href="/zh/guides/payment-methods-comparison/">虚拟卡平台与支付方式对比</a>；地区注册策略见 <a href="/zh/guides/regional-access-strategy/">全球地区访问与注册指引</a>。</p>
+<p>Claude 接受的支付方式与官方扣款失败排查清单见 <a href="/zh/guides/payment-methods-comparison/">Claude 支付方式、银行卡风险与扣款失败排查</a>；地区注册策略见 <a href="/zh/guides/regional-access-strategy/">全球地区访问与注册指引</a>。</p>
 
 <h3>卡种与 BIN 风险概览</h3>
+<p>下表的风险等级是社区观察，不是 Anthropic 的数据。Anthropic 没有公布会拦截哪些卡类型或 BIN。</p>
 <table>
   <thead>
     <tr>
@@ -218,7 +220,7 @@ python3 -c "import json; d=json.load(open('.claude.json')); print(d.get('oauthAc
     <tr>
       <td>美国金融科技借记卡</td>
       <td>低–中</td>
-      <td>确认 BIN 未被过度发放；余额预留 25 美元以上</td>
+      <td>Pro 与 Max 列出接受借记卡；余额要够支付续费</td>
     </tr>
     <tr>
       <td>支持国家的国际借记卡</td>
@@ -228,15 +230,15 @@ python3 -c "import json; d=json.load(open('.claude.json')); print(d.get('oauthAc
     <tr>
       <td>大众预付卡 / 加密货币充值预付卡</td>
       <td>高</td>
-      <td>易 instant refund，勿作主卡</td>
+      <td>Pro 与 Max 未列出预付卡；常见拒付和即时退款反馈</td>
     </tr>
   </tbody>
 </table>
 
 <ul>
-  <li><strong>优先选用成熟美国 Visa/Mastercard BIN：</strong> 社区常提及 485932、532959、428803 等，绑卡前请自行核实当前通过率，issuer 风险等级会随时间调整。</li>
-  <li><strong>账单地址严格对齐：</strong> 州（State）与邮编（ZIP）须与代理出口 IP 归属地一致。加州 IP 配德州账单即使卡有效也会触发 AVS 不匹配。</li>
-  <li><strong>绑卡前预留充足余额：</strong> 平台可能预授权约 1 美元，建议卡内至少 25 美元，避免预扣与首月扣款任一失败。</li>
+  <li><strong>优先选择成熟银行发行的卡：</strong> Anthropic 没有公布会拦截哪些 BIN，网上流传的 BIN 列表都未经验证，并会随发卡方调整风险等级而过期。选择能让你准确设置账单地址的银行信用卡或借记卡。</li>
+  <li><strong>账单地址：</strong> 官方清单要求账单地址与银行记录一致，并与发卡国家一致。社区反馈也提到，IP 国家、账单国家和手机号国家保持一致能减少摩擦；这是观察，不是官方规则。</li>
+  <li><strong>预留足够余额：</strong> 确保卡内余额够支付首次扣款和下一次续费。续费失败可能让账号降级为 Free 计划。</li>
   <li><strong>支付工具保持稳定：</strong> 同一账号勿每周换卡，频繁变更类似账号被盗，反而提高审查概率。</li>
 </ul>
 
@@ -245,7 +247,7 @@ python3 -c "import json; d=json.load(open('.claude.json')); print(d.get('oauthAc
   <li>浏览器 Profile 已与目标地区对齐（见 <a href="/zh/guides/environment-cleanup-and-ip-setup/">环境纯化与 IP 配置</a>）。</li>
   <li>住宅 IP 与账单国家一致（见 <a href="/zh/guides/vpn-and-proxy-selection/">VPN 与代理选择</a>）。</li>
   <li>使用全新或独占手机号，非公共接码池。</li>
-  <li>低风控 BIN 虚拟卡或实体卡，账单 ZIP 匹配。</li>
+  <li>账单地址与银行记录一致的信用卡或借记卡。</li>
   <li>启用 2FA 并下载备份码后再结束会话。</li>
 </ol>
 
@@ -266,7 +268,7 @@ python3 -c "import json; d=json.load(open('.claude.json')); print(d.get('oauthAc
 
 <h3>切勿操作</h3>
 <ul>
-  <li>勿对正常 Pro 扣款发起 chargeback，将同时失去支付通道与账号。</li>
+  <li>不要在使用 Anthropic 退款申请之前向银行发起争议。Anthropic 没有公布争议对账号的影响，你可能因此失去付款渠道。</li>
   <li>勿购买二手 Claude 账号，常携带历史封禁与盗绑支付信息。</li>
   <li>勿在机房 IP 下注册并绑定账单国家不一致的美国卡。</li>
   <li>为图省事关闭 2FA 会增加新 IP 登录时的短信重验证。</li>
@@ -275,12 +277,12 @@ python3 -c "import json; d=json.load(open('.claude.json')); print(d.get('oauthAc
 <h2>常见问题</h2>
 
 <h3>扣款成功后为何立刻显示 Refunded？</h3>
-<p>多为 BIN 风险、AVS 地址验证失败或同卡短时多次尝试导致自动退款。修正账单对齐、更换低风险 BIN，确保 IP 地区匹配；同一账号建议间隔 24–48 小时再试。</p>
+<p>Anthropic 收不到银行拒绝的具体原因，所以原因并不总是明确。常见的可能原因有：账单地址不一致、卡类型不被接受、3D Secure 验证失败。先对照<a href="/zh/guides/payment-methods-comparison/">官方扣款失败清单</a>排查，再重试一次，不要在同一账号上反复尝试。</p>
 
 <h3>应先注册还是先配代理？</h3>
 <p>先配环境。完成 IP 与系统对齐（<a href="/zh/guides/device-setup-guide/">跨平台设备配置</a>）后，在同一会话、同一地区内完成注册、验证、绑卡与 2FA，中途勿切换地区。</p>
 
 <h3>其他 SaaS 能扣款为何 Claude 失败？</h3>
-<p>Claude 风控更严。预付 BIN、账单国别不符、曾与退款记录关联的卡是常见原因，详见 <a href="/zh/guides/payment-methods-comparison/">支付方式对比</a>。</p>
+<p>先对照 Anthropic 的清单检查：账单地区是否受支持、账单地址是否完全一致、3D Secure 是否完成、卡类型是否为信用卡或借记卡。Pro 与 Max 只列出信用卡和借记卡，预付卡可能因此被拒。详见 <a href="/zh/guides/payment-methods-comparison/">支付方式指南</a>。</p>
 `,
 };

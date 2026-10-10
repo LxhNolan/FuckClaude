@@ -1,280 +1,104 @@
 export const payment_methods_comparison_content = {
   en: `
-<h2>1. Major Virtual Card Platform Comparison</h2>
-<p>Virtual card providers differ significantly in BIN reputation, supported regions, KYC requirements, and fees. Choose based on your registration region and risk tolerance:</p>
+<p>This guide covers what Claude billing accepts, what Anthropic's decline checklist says, and where card risk comes from. Earlier versions listed "success rates" and "high-success BINs". Those figures had no source and have been removed: Anthropic does not publish which cards or BINs it blocks.</p>
 
-<h3>Platform Feature Matrix</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Feature</th>
-      <th>US-Based Platforms</th>
-      <th>International Platforms</th>
-      <th>Crypto-Funded Cards</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>BIN Reputation</strong></td>
-      <td>High (established US fintech)</td>
-      <td>Medium (varies by issuer)</td>
-      <td>Low-Medium (prepaid flags)</td>
-    </tr>
-    <tr>
-      <td><strong>KYC Requirements</strong></td>
-      <td>SSN or ITIN required</td>
-      <td>Passport or ID, varies</td>
-      <td>Minimal to none</td>
-    </tr>
-    <tr>
-      <td><strong>Monthly Fees</strong></td>
-      <td>$0-$5</td>
-      <td>$3-$10</td>
-      <td>$0-$3</td>
-    </tr>
-    <tr>
-      <td><strong>Claude Success Rate</strong></td>
-      <td>85-95%</td>
-      <td>60-80%</td>
-      <td>40-60%</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3>Recommended BIN Ranges</h3>
-<pre><code># High-success BIN examples (verify current status before use):
-485932 - US-based fintech debit card
-532959 - US credit card BIN
-428803 - International Visa debit
-
-# Avoid these high-risk BINs:
-4571xx - Over-issued prepaid, frequently flagged
-5168xx - Public trial abuse history</code></pre>
-
-<h2>2. Credit vs Debit vs Prepaid Card Risk Assessment</h2>
-<p>Payment processors apply different risk scores to card types. Credit cards generally have the highest acceptance rates:</p>
-
+<h2>1. What Claude accepts</h2>
 <ul>
-  <li><strong>Credit Cards:</strong> Lowest risk score, highest approval rate. Preferred by payment processors because they have chargeback protection. Use for initial Pro subscription binding.</li>
-  <li><strong>Debit Cards:</strong> Medium risk score. Real-time settlement reduces processor risk. Acceptable for Claude subscriptions if BIN is from established banks.</li>
-  <li><strong>Prepaid Cards:</strong> Highest risk score. Frequently used for trial abuse and fraud. Many prepaid BINs are blacklisted by Anthropic's payment processor. Avoid unless from premium providers.</li>
+  <li><strong>Pro and Max on the web:</strong> credit or debit cards only. PayPal, Venmo, and other third-party payment processors are not accepted.</li>
+  <li><strong>Team plan:</strong> credit, debit, or prepaid cards. ACH bank transfers are not accepted.</li>
+  <li><strong>App Store and Google Play:</strong> if you subscribe in the iOS or Android app, the store handles payment, invoices, and cancellation, and Apple or Google decides which payment methods are available.</li>
+  <li><strong>Tax:</strong> calculated from the billing address, which is taken from the payment method's address.</li>
 </ul>
 
-<h2>3. Cryptocurrency Payment Channels & Anonymity</h2>
-<p>Some third-party API gateways and virtual card platforms accept cryptocurrency funding. Understand the trade-offs:</p>
-
-<h3>Crypto Payment Options</h3>
+<h2>2. Card type and risk</h2>
+<p>Anthropic's decline article states that it does not receive the issuing bank's reason for a decline, and no official page lists blocked card types or BINs. Treat any BIN list or success-rate table from other sites as unverified.</p>
 <ul>
-  <li><strong>Direct USDT/BTC to Virtual Card:</strong> Platforms like privacy-focused card issuers allow crypto top-ups. Lower KYC requirements but cards may have prepaid BINs.</li>
-  <li><strong>P2P Card Marketplaces:</strong> Buy pre-funded virtual cards with crypto. High anonymity but significant fraud risk and no recourse if card is declined.</li>
-  <li><strong>Crypto-to-Fiat Offramps:</strong> Convert crypto to fiat via exchanges, then fund traditional virtual card platforms. More KYC but better BIN reputation.</li>
+  <li><strong>What the official pages support:</strong> Pro and Max list credit and debit cards. Prepaid cards are listed only for the Team plan, so a prepaid card on Pro or Max can be declined for that reason alone.</li>
+  <li><strong>What field reports suggest:</strong> some reports describe a ban after paying with a virtual card, and a stable account paying with a bank-issued US credit card. These are individual cases, not a rule. See the <a href="/news/#community-posts">community field reports</a>.</li>
+  <li><strong>Cards sold by third parties:</strong> you cannot know who else uses the card, whether the issuer will freeze it, or whether the balance will still cover the next renewal. There is no recourse if the card is declined or reversed.</li>
+  <li><strong>Crypto-funded cards:</strong> these are usually prepaid, so the Pro and Max limitation above applies.</li>
 </ul>
 
-<h3>Anonymity vs Success Rate Trade-off</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Method</th>
-      <th>Anonymity</th>
-      <th>Success Rate</th>
-      <th>Risk</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>KYC US Card + Residential IP</td>
-      <td>Low</td>
-      <td>Very High (90%+)</td>
-      <td>Account linkage</td>
-    </tr>
-    <tr>
-      <td>KYC Intl Card + Clean Proxy</td>
-      <td>Medium</td>
-      <td>High (75%+)</td>
-      <td>Moderate</td>
-    </tr>
-    <tr>
-      <td>Crypto-Funded Prepaid</td>
-      <td>High</td>
-      <td>Low (50%)</td>
-      <td>High decline rate</td>
-    </tr>
-  </tbody>
-</table>
+<h2>3. Why a payment fails</h2>
+<p>Anthropic's checklist, in the order it gives it:</p>
+<ol>
+  <li><strong>Billing location:</strong> the billing address and the card's country of origin must be an eligible billing location, and the billing address must match the origin country.</li>
+  <li><strong>Billing address:</strong> it must match the address your bank has on file. A missing accent or a misspelled street name can cause a decline.</li>
+  <li><strong>3D Secure:</strong> complete the one-time password or banking-app confirmation when your bank asks for it.</li>
+  <li><strong>Accepted method:</strong> use a credit or debit card, not PayPal or Venmo.</li>
+  <li><strong>Funds:</strong> the balance must cover the full amount.</li>
+  <li><strong>Retry:</strong> try another card, or the same card later, because temporary network problems also cause declines.</li>
+  <li><strong>Ask your bank:</strong> only the issuer can say why it declined the charge.</li>
+</ol>
 
-<h2>4. Payment Failure Root Causes & Solutions</h2>
-<p>Payment rejections follow predictable patterns. Diagnose and resolve systematically:</p>
+<h2>4. Subscribing through the App Store or Google Play</h2>
+<p>Store subscriptions use the store's payment methods and billing, and Anthropic does not issue the invoice. For App Store purchases Apple handles refunds; for Google Play, contact Claude Support. Some field reports recommend this route as a refund fallback. Anthropic does not document whether it changes account risk.</p>
 
-<h3>Common Failure Scenarios</h3>
+<h2>5. Renewals, refunds, and chargebacks</h2>
 <ul>
-  <li><strong>Scenario 1: Instant Decline During Binding</strong>
-    <ul>
-      <li>Root Cause: BIN blacklist or address/IP country mismatch</li>
-      <li>Solution: Switch to higher-reputation BIN, align billing address state with proxy IP state</li>
-    </ul>
-  </li>
-  <li><strong>Scenario 2: Subscription Succeeds, Refunded Within 48 Hours</strong>
-    <ul>
-      <li>Root Cause: Payment processor fraud review flagged transaction retroactively</li>
-      <li>Solution: Use real residential address (verify via USPS lookup), ensure card has $50+ balance to signal legitimacy</li>
-    </ul>
-  </li>
-  <li><strong>Scenario 3: Renewal Fails After Successful First Month</strong>
-    <ul>
-      <li>Root Cause: IP changed significantly, card expired, or insufficient balance</li>
-      <li>Solution: Maintain consistent IP range, update card before expiry, auto-reload card balance</li>
-    </ul>
-  </li>
+  <li><strong>Failed renewal:</strong> if the payment method fails, the account can drop to the Free plan. Check Settings &gt; Billing for the payment status and update the card there.</li>
+  <li><strong>Refunds:</strong> payments are generally non-refundable unless the Consumer Terms or local law say otherwise. Outside Europe, request a refund in the app under Get help &gt; Claude Refund Request.</li>
+  <li><strong>Chargebacks:</strong> Anthropic has not published how a bank dispute affects an account. Use the refund request first, and keep the receipt emails ("Your receipt from Anthropic") in case you need them later.</li>
 </ul>
 
-<h3>Pre-Binding Validation Checklist</h3>
-<pre><code># Before binding a new card, validate:
-1. Card balance ≥ $25 (to cover $1 pre-auth + first month)
-2. Billing address is real US address (use USPS.com lookup)
-3. Address state matches proxy IP state (check ipinfo.io)
-4. BIN is not on public blacklists (search "BIN fraud reports")
-5. Card has not been used on 2+ Claude accounts already
-
-# Test card validity before Claude binding:
-# Use a low-risk merchant (e.g., $1 donation) to verify card works</code></pre>
+<h2>6. Checklist before you subscribe</h2>
+<pre><code>1. A credit or debit card issued by a bank, held in your own name
+2. The billing country is an eligible billing location (check the Help Center)
+3. The billing address matches your bank's record character for character
+4. The card supports 3D Secure and you can receive the code
+5. The balance covers the first charge and the next renewal
+6. The card is not shared with other Claude accounts
+7. Keep the receipt emails</code></pre>
 `,
   zh: `
-<h2>一、 主流虚拟卡平台对比（Visa/Mastercard BIN 分布）</h2>
-<p>虚拟卡提供商在 BIN 信誉、支持地区、KYC 要求和费用方面差异显著。根据注册地区和风险承受能力选择：</p>
+<p>本文说明 Claude 账单接受哪些支付方式、Anthropic 官方的扣款失败排查清单，以及银行卡风险来自哪里。旧版本列出的「成功率」和「高成功率 BIN」没有来源，已经删除：Anthropic 并未公布会拦截哪些银行卡或 BIN。</p>
 
-<h3>平台功能矩阵</h3>
-<table>
-  <thead>
-    <tr>
-      <th>功能</th>
-      <th>美国平台</th>
-      <th>国际平台</th>
-      <th>加密货币充值卡</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>BIN 信誉</strong></td>
-      <td>高（知名美国金融科技）</td>
-      <td>中（因发行商而异）</td>
-      <td>低-中（预付标记）</td>
-    </tr>
-    <tr>
-      <td><strong>KYC 要求</strong></td>
-      <td>需要 SSN 或 ITIN</td>
-      <td>护照或身份证，因平台而异</td>
-      <td>最小到无</td>
-    </tr>
-    <tr>
-      <td><strong>月费</strong></td>
-      <td>$0-$5</td>
-      <td>$3-$10</td>
-      <td>$0-$3</td>
-    </tr>
-    <tr>
-      <td><strong>Claude 成功率</strong></td>
-      <td>85-95%</td>
-      <td>60-80%</td>
-      <td>40-60%</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3>推荐 BIN 范围</h3>
-<pre><code># 高成功率 BIN 示例（使用前验证当前状态）：
-485932 - 美国金融科技借记卡
-532959 - 美国信用卡 BIN
-428803 - 国际 Visa 借记卡
-
-# 避免这些高风险 BIN：
-4571xx - 过度发行的预付卡，频繁被标记
-5168xx - 公开试用滥用历史</code></pre>
-
-<h2>二、 信用卡 vs 借记卡 vs 预付卡风险评估</h2>
-<p>支付处理商对卡类型应用不同的风险评分。信用卡通常有最高的接受率：</p>
-
+<h2>一、Claude 接受哪些支付方式</h2>
 <ul>
-  <li><strong>信用卡：</strong> 最低风险评分，最高批准率。支付处理商更喜欢信用卡，因为它们有退款保护。用于初始 Pro 订阅绑定。</li>
-  <li><strong>借记卡：</strong> 中等风险评分。实时结算降低处理商风险。如果 BIN 来自知名银行，可用于 Claude 订阅。</li>
-  <li><strong>预付卡：</strong> 最高风险评分。频繁用于试用滥用和欺诈。许多预付 BIN 被 Anthropic 支付处理商列入黑名单。除非来自高端提供商，否则避免使用。</li>
+  <li><strong>网页端 Pro 与 Max：</strong>只接受信用卡或借记卡。不接受 PayPal、Venmo 等第三方支付处理商。</li>
+  <li><strong>Team 计划：</strong>接受信用卡、借记卡或预付卡，不接受 ACH 银行转账。</li>
+  <li><strong>App Store 与 Google Play：</strong>在 iOS 或 Android 应用内订阅时，由应用商店负责扣款、发票和取消，可用的支付方式由 Apple 或 Google 决定。</li>
+  <li><strong>税费：</strong>根据账单地址计算，账单地址取自支付方式上的地址。</li>
 </ul>
 
-<h2>三、 加密货币支付渠道与匿名性权衡</h2>
-<p>一些第三方 API 网关和虚拟卡平台接受加密货币充值。理解权衡：</p>
-
-<h3>加密货币支付选项</h3>
+<h2>二、卡类型与风险</h2>
+<p>官方的扣款失败文章说明，Anthropic 收不到发卡行拒绝的具体原因，也没有任何官方页面列出被拦截的卡类型或 BIN。其他网站上的 BIN 列表或成功率表格都应视为未经验证。</p>
 <ul>
-  <li><strong>直接 USDT/BTC 到虚拟卡：</strong> 隐私导向的卡发行商等平台允许加密货币充值。KYC 要求较低，但卡可能有预付 BIN。</li>
-  <li><strong>P2P 卡市场：</strong> 用加密货币购买预充值虚拟卡。高匿名性但欺诈风险大，卡被拒绝无追索权。</li>
-  <li><strong>加密货币到法币出金：</strong> 通过交易所将加密货币转换为法币，然后为传统虚拟卡平台充值。更多 KYC 但 BIN 信誉更好。</li>
+  <li><strong>官方页面能支持的结论：</strong>Pro 与 Max 列出的是信用卡和借记卡。预付卡只在 Team 计划中列出，所以在 Pro 或 Max 上，预付卡可能仅因类型而被拒。</li>
+  <li><strong>实战反馈的信号：</strong>有反馈称用虚拟卡付款后被封，也有账号用银行发行的美国信用卡长期稳定使用。这些是个案，不是规则。参见<a href="/zh/news/#community-posts">社区实战帖</a>。</li>
+  <li><strong>第三方出售的卡：</strong>你无法确定还有谁在用这张卡、发卡方是否会冻结它，也无法确定余额是否足够支付下一次续费。卡被拒或被撤销后没有追索渠道。</li>
+  <li><strong>加密货币充值的卡：</strong>通常是预付卡，上述 Pro 与 Max 的限制同样适用。</li>
 </ul>
 
-<h3>匿名性 vs 成功率权衡</h3>
-<table>
-  <thead>
-    <tr>
-      <th>方法</th>
-      <th>匿名性</th>
-      <th>成功率</th>
-      <th>风险</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>KYC 美国卡 + 住宅 IP</td>
-      <td>低</td>
-      <td>非常高（90%+）</td>
-      <td>账号关联</td>
-    </tr>
-    <tr>
-      <td>KYC 国际卡 + 干净代理</td>
-      <td>中</td>
-      <td>高（75%+）</td>
-      <td>中等</td>
-    </tr>
-    <tr>
-      <td>加密货币充值预付卡</td>
-      <td>高</td>
-      <td>低（50%）</td>
-      <td>高拒绝率</td>
-    </tr>
-  </tbody>
-</table>
+<h2>三、扣款失败的原因</h2>
+<p>官方排查清单，按官方给出的顺序：</p>
+<ol>
+  <li><strong>账单地区：</strong>账单地址与银行卡发卡国家必须属于受支持的账单地区，且账单地址要与发卡国家一致。</li>
+  <li><strong>账单地址：</strong>必须与银行预留的地址一致。少一个重音符号或街道名拼错，都可能导致拒付。</li>
+  <li><strong>3D Secure：</strong>银行要求时，完成短信验证码或银行 App 确认。</li>
+  <li><strong>支付方式：</strong>使用信用卡或借记卡，不要用 PayPal、Venmo。</li>
+  <li><strong>余额：</strong>余额要覆盖全部金额。</li>
+  <li><strong>重试：</strong>换一张卡，或稍后再试，因为临时的网络问题也会导致拒付。</li>
+  <li><strong>询问银行：</strong>只有发卡行能说明拒绝的原因。</li>
+</ol>
 
-<h2>四、 支付失败常见原因与规避方案</h2>
-<p>支付拒绝遵循可预测模式。系统化诊断和解决：</p>
+<h2>四、通过 App Store 或 Google Play 订阅</h2>
+<p>应用商店订阅使用商店的支付方式和账单，Anthropic 不开具发票。App Store 的退款由 Apple 处理；Google Play 的订阅请联系 Claude 支持团队。有实战帖建议把这条路径当作退款退路。Anthropic 没有说明它是否会影响账号风险。</p>
 
-<h3>常见失败场景</h3>
+<h2>五、续费、退款与拒付</h2>
 <ul>
-  <li><strong>场景 1：绑定期间即时拒绝</strong>
-    <ul>
-      <li>根因：BIN 黑名单或地址/IP 国家不匹配</li>
-      <li>解决方案：切换到高信誉 BIN，将账单地址州与代理 IP 州对齐</li>
-    </ul>
-  </li>
-  <li><strong>场景 2：订阅成功，48 小时内退款</strong>
-    <ul>
-      <li>根因：支付处理商欺诈审查追溯标记交易</li>
-      <li>解决方案：使用真实住宅地址（通过 USPS 查询验证），确保卡内余额 $50+ 以示合法性</li>
-    </ul>
-  </li>
-  <li><strong>场景 3：首月成功后续费失败</strong>
-    <ul>
-      <li>根因：IP 显著变化、卡过期或余额不足</li>
-      <li>解决方案：保持一致的 IP 范围，过期前更新卡，自动充值卡余额</li>
-    </ul>
-  </li>
+  <li><strong>续费失败：</strong>支付方式失败时，账号可能降级为 Free 计划。到 Settings &gt; Billing 查看付款状态并在那里更新银行卡。</li>
+  <li><strong>退款：</strong>付款通常不可退款，除非消费者服务条款或当地法律另有规定。欧洲以外的用户可在应用内通过 Get help &gt; Claude Refund Request 申请退款。</li>
+  <li><strong>拒付（chargeback）：</strong>Anthropic 没有公布银行争议对账号的影响。先走退款申请流程，并保留收据邮件（主题为「Your receipt from Anthropic」），以备后续需要。</li>
 </ul>
 
-<h3>绑卡前验证检查清单</h3>
-<pre><code># 绑定新卡前验证：
-1. 卡余额 ≥ $25（覆盖 $1 预授权 + 首月）
-2. 账单地址是真实美国地址（使用 USPS.com 查询）
-3. 地址州与代理 IP 州匹配（检查 ipinfo.io）
-4. BIN 不在公共黑名单上（搜索"BIN 欺诈报告"）
-5. 卡未在 2+ Claude 账号上使用过
-
-# 在 Claude 绑定前测试卡有效性：
-# 使用低风险商家（如 $1 捐赠）验证卡有效</code></pre>
+<h2>六、订阅前检查清单</h2>
+<pre><code>1. 银行发行的信用卡或借记卡，持卡人是你本人
+2. 账单所在国家属于受支持的账单地区（以帮助中心为准）
+3. 账单地址与银行记录逐字符一致
+4. 银行卡支持 3D Secure，并且你能收到验证码
+5. 余额覆盖首次扣款和下一次续费
+6. 这张卡没有被其他 Claude 账号共用
+7. 保留收据邮件</code></pre>
 `,
 };

@@ -1,0 +1,96 @@
+---
+import { OFFICIAL_RULES, OFFICIAL_RULES_CHECKED_AT } from '../config/official-rules';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="rules" data-lang={lang} aria-labelledby="rules-title">
+  <div class="rules__head">
+    <h2 id="rules-title">{t('rules.title')}</h2>
+    <p>{t('rules.sub').replace('{date}', OFFICIAL_RULES_CHECKED_AT)}</p>
+  </div>
+  <ul class="rules__grid">
+    {
+      OFFICIAL_RULES.map((rule) => (
+        <li class="rule">
+          <h3>{rule.title[lang]}</h3>
+          <p>{rule.body[lang]}</p>
+          <p class="rule__src">
+            {t('rules.source')}:{' '}
+            {rule.sources.map((source, index) => (
+              <>
+                {index > 0 && ' · '}
+                <a href={source.url} target="_blank" rel="noopener noreferrer">
+                  {source.name[lang]} ↗
+                </a>
+              </>
+            ))}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .rules {
+    padding: 8px 0 12px;
+  }
+  .rules__head h2 {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    margin: 0 0 4px;
+  }
+  .rules__head p {
+    font-size: 0.92rem;
+    color: var(--muted);
+    margin: 0 0 16px;
+    max-width: 72ch;
+    line-height: 1.55;
+  }
+  .rules__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+    gap: 14px;
+  }
+  .rule {
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    overflow-wrap: anywhere;
+  }
+  .rule h3 {
+    font-size: 1rem;
+    margin: 0 0 6px;
+  }
+  .rule p {
+    margin: 0 0 8px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .rules[data-lang='zh'] .rule p {
+    line-height: 1.75;
+  }
+  .rule p.rule__src {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--muted-2);
+  }
+  .rule__src a {
+    color: var(--accent-strong);
+    font-weight: 600;
+  }
+</style>

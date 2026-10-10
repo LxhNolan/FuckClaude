@@ -97,13 +97,14 @@ async function diagnoseAPI() {
 diagnoseAPI();</code></pre>
 
 <h2>3. Payment Binding Failure Root Cause</h2>
-<p>Payment rejections occur at multiple stages. Diagnose by examining the failure point:</p>
+<p>Anthropic does not receive the bank's reason for a decline, so work through the likely causes in order. The <a href="/guides/payment-methods-comparison/">payment methods guide</a> has the full official checklist:</p>
 
 <ul>
-  <li><strong>Card Declined (Pre-Authorization):</strong> Insufficient balance (<$1), invalid CVV, or expired card. Ensure card has ≥$25 balance.</li>
-  <li><strong>BIN Rejected:</strong> High-risk prepaid BIN flagged by payment processor. Switch to credit/debit BIN from established banks.</li>
-  <li><strong>Address Mismatch:</strong> Billing address country/state does not align with IP geolocation. Use real US address matching proxy exit state.</li>
-  <li><strong>Fraud Detection:</strong> Rapid successive binding attempts. Wait 24 hours, bind only one card per session.</li>
+  <li><strong>Card Declined:</strong> Insufficient balance, an invalid CVV, or an expired card. Make sure the balance covers the full amount.</li>
+  <li><strong>Card Type Not Accepted:</strong> Pro and Max list credit and debit cards only, so a prepaid card can be declined for that reason alone. Anthropic does not publish blocked BINs.</li>
+  <li><strong>Address Mismatch:</strong> The billing address must match your bank's record and the card's country of origin, and be an eligible billing location.</li>
+  <li><strong>3D Secure Not Completed:</strong> Confirm the SMS code or bank app prompt when your bank asks for it.</li>
+  <li><strong>Repeated Attempts:</strong> Retry once, then ask your bank. Only the card issuer can explain a decline.</li>
 </ul>
 
 <h2>4. Common Issues FAQ & Quick Fixes</h2>
@@ -217,14 +218,15 @@ async function diagnoseAPI() {
 
 diagnoseAPI();</code></pre>
 
-<h2>三、 支付绑卡失败定位（BIN 拒绝、地址不匹配）</h2>
-<p>支付拒绝发生在多个阶段。通过检查失败点进行诊断：</p>
+<h2>三、 支付绑卡失败定位（卡类型、地址不匹配）</h2>
+<p>Anthropic 收不到银行拒绝的具体原因，所以请按可能性依次排查。完整的官方清单见<a href="/zh/guides/payment-methods-comparison/">支付方式指南</a>：</p>
 
 <ul>
-  <li><strong>卡被拒绝（预授权）：</strong> 余额不足（<$1）、CVV 无效或卡已过期。确保卡内余额 ≥$25。</li>
-  <li><strong>BIN 被拒绝：</strong> 高风险预付 BIN 被支付处理商标记。切换到知名银行的信用/借记 BIN。</li>
-  <li><strong>地址不匹配：</strong> 账单地址国家/州与 IP 地理位置不一致。使用与代理出口州匹配的真实美国地址。</li>
-  <li><strong>欺诈检测：</strong> 快速连续绑卡尝试。等待 24 小时，每次会话仅绑定一张卡。</li>
+  <li><strong>卡被拒绝：</strong> 余额不足、CVV 无效或卡已过期。确保余额够支付全部金额。</li>
+  <li><strong>卡类型不被接受：</strong> Pro 与 Max 只列出信用卡和借记卡，预付卡可能仅因类型而被拒。Anthropic 没有公布被拦截的 BIN。</li>
+  <li><strong>地址不匹配：</strong> 账单地址必须与银行记录一致，与发卡国家一致，并属于受支持的账单地区。</li>
+  <li><strong>3D Secure 未完成：</strong> 银行要求时，完成短信验证码或银行 App 确认。</li>
+  <li><strong>反复尝试：</strong> 重试一次后询问银行。只有发卡行能说明拒绝的原因。</li>
 </ul>
 
 <h2>四、 常见问题 FAQ 与快速解决方案</h2>

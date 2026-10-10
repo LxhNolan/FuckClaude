@@ -20,12 +20,23 @@ alwaysApply: true
 - Use `src/components/LocaleSuggestBanner.astro` to render a non-blocking suggestion banner when browser language differs from current page language.
 
 ## News & Community Content
-- **Official News**: Maintained in `src/config/news.ts`. Items include bilingual title, summary, takeaway, category tag, and source link.
-- **Social / X Community Posts**: Maintained in `src/config/community-posts.ts` and rendered via `src/components/CommunityPosts.astro`. Must retain direct links to original X posts, author name, handle, profile link, tags, and practical takeaways.
-- **Guides**: Guide metadata lives in `src/config/guides.ts`, while in-depth content articles live in `src/content/guides/`.
+- **News**: Maintained in `src/config/news.ts`. Items include bilingual title, summary, takeaway, category tag, and source link. `publishedAt` must match the date on the cited source page (for example the Transparency Hub's "Last updated" date), not the date the item was added.
+- **Non-official news items** (media or community reports, such as regional ban waves): cite the original publisher in `sourceName`, cross-check at least two independent sources, and state that Anthropic has not confirmed causes or scale. Do not cite vendor blogs that sell a competing service as the sole source.
+- **Social / X Community Posts**: Maintained in `src/config/community-posts.ts` and rendered via `src/components/CommunityPosts.astro`. Must retain direct links to original X posts, author name, handle, profile link, tags, and practical takeaways. Verify each post before adding it (author, date, text) through `https://api.fxtwitter.com/<handle>/status/<id>`. Never add posts that cannot be verified, and do not repeat advice that tells users to open replacement accounts after a ban. Available tags are defined in `POST_TAGS`; each tag also needs a `data-tag` colour rule in `CommunityPosts.astro`.
+- **News filtering**: `ClaudeNews.astro` and `getLatestNews()` accept `categories`; the guides hub shows only `policy` and `security` items, after the guide catalog.
+- **Community post links**: Every post in `community-posts.ts` sets `relatedGuideSlug`; `CommunityPosts.astro` renders it as a "Related guide" link.
+
+## Guides
+- **Single source of truth**: `src/config/guides.ts` holds all guide metadata (slug, category, bilingual title/summary, `publishedAt`, `updatedAt`, optional `verifiedAt`, curated `related`, `sources`, `listed`). `updatedAt` exists only there. Bodies live in `src/content/guides/*.ts` and are registered in `src/content/guidesData.ts` as `GUIDE_CONTENT`. Adding a guide means touching those three places.
+- **Pages**: `/guides/`, `/zh/guides/`, and the article routes are thin wrappers around `GuidesHubPage.astro` and `GuideArticlePage.astro` (both take `lang`). The hub catalog is `GuideCatalog.astro`; the official-rules block is `OfficialRules.astro`. Do not copy these pages per language.
+- **Official facts**: Statements about Anthropic policy (supported regions, ban reasons, appeals, accepted payment methods, rate limits, transparency numbers) must link to an official page through `OFFICIAL_SOURCES` in `guides.ts`. `src/config/official-rules.ts` feeds the hub block; re-check it and bump `OFFICIAL_RULES_CHECKED_AT` and the guide's `verifiedAt` whenever one of those facts changes. Region facts must also match `https://www.anthropic.com/supported-countries` and `src/config/signals.ts`.
+- **No unsourced numbers**: Do not publish card BINs, "success rate" or "pass rate" figures, or savings percentages without a source. Label community observations as such. Do not recommend specific card types or BINs as "safe", and do not promise that any setup avoids bans.
+- **Hidden guides**: `listed: false` keeps a guide reachable by URL but removes it from the hub, home page, and related lists (`claude-ai-content-watermarking`).
+- **Article HTML**: Bodies are HTML strings. `prepareArticleHtml()` in `src/utils/guide-html.ts` adds heading ids, builds the table of contents, and wraps every `<table>` in `.table-scroll`; do not add your own table wrappers. Dates use `YYYY-MM-DD` (`YYYY-MM` is padded to the first of the month for JSON-LD).
+- **Chinese punctuation**: Chinese text uses full-width punctuation (，。？！；：). Keep ASCII punctuation inside code, identifiers, and English phrases.
 
 ## Sponsors
-- **Sponsors Config**: Maintained in `src/config/sponsors.ts` and rendered via `src/components/Sponsors.astro`. Logos live under `public/sponsors/`. Entries include bilingual headlines, taglines, CTAs, and referral URLs.
+- **Sponsors Config**: Maintained in `src/config/sponsors.ts` and rendered via `src/components/Sponsors.astro`. Logos live under `public/sponsors/`. Entries include bilingual headlines, taglines, CTAs, and referral URLs. Sponsor copy describes the product neutrally and must not promise to bypass Claude risk control or avoid bans.
 
 ## Detection Signals
 - Fingerprint detection signals live in `src/config/signals.ts` with sum of weights = 100.

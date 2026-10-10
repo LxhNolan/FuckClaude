@@ -1,5 +1,7 @@
 export const ban_case_studies_content = {
   en: `
+<p><strong>Note:</strong> The case details below have not been independently verified, and the root causes are interpretations, not findings confirmed by Anthropic. Anthropic's official ban reasons are summarized in <a href="/guides/antiban-essentials/">Anti-Ban Essentials</a>.</p>
+
 <h2>1. Case 1: Timezone Mismatch Mass Ban</h2>
 <p><strong>Incident:</strong> A team of 15 developers registered Claude Pro accounts while traveling overseas. Within 72 hours, 12 accounts were permanently banned with "Terms of Service violation" notices.</p>
 
@@ -27,21 +29,21 @@ sudo systemsetup -settimezone "America/New_York"</code></pre>
   <li>Clear all browser cookies and restart after changing timezone to flush cached fingerprints.</li>
 </ul>
 
-<h2>2. Case 2: High-Risk Virtual Card BIN Refund Ban</h2>
+<h2>2. Case 2: Prepaid Card Refund and Suspension</h2>
 <p><strong>Incident:</strong> Eight Claude Pro subscriptions were charged successfully on day 1, but accounts were automatically refunded and suspended within 48 hours.</p>
 
 <h3>Root Cause Analysis</h3>
 <ul>
-  <li>All accounts used virtual prepaid Visa cards with BIN <code>4571</code>, a publicly known high-risk BIN frequently used for trial abuse.</li>
+  <li>All accounts used virtual prepaid Visa cards issued under the same BIN. Anthropic does not publish which BINs it blocks, and prepaid cards are not listed as accepted for Pro or Max.</li>
   <li>Billing addresses were generic (e.g., "123 Main St"), not real residential addresses matching the card-issuing bank's region.</li>
-  <li>Anthropic's payment processor flagged the transactions as high-risk, triggered automatic refunds, and marked accounts as "Refunded / Suspended".</li>
+  <li>The charges were refunded and the accounts were marked "Refunded / Suspended". Anthropic has not stated why.</li>
 </ul>
 
 <h3>Prevention Checklist</h3>
 <ul>
-  <li>Use virtual card BINs with established reputations (e.g., <code>485932</code>, <code>532959</code>, <code>428803</code>) issued by recognized US fintech banks.</li>
+  <li>Use a credit or debit card from an established bank instead of a prepaid virtual card.</li>
   <li>Fill billing address with real, verifiable US addresses (use USPS address lookup) that match the state of your proxy IP.</li>
-  <li>Ensure card balance exceeds $25 USD before binding to cover the initial $1 pre-authorization hold plus the first month.</li>
+  <li>Make sure the card balance covers the first charge and the next renewal.</li>
   <li>Never bind the same virtual card to more than 2 Claude accounts.</li>
 </ul>
 
@@ -109,13 +111,15 @@ python3 -c "import json; d=json.load(open('.claude.json')); print(d.get('oauthAc
 
 <ul>
   <li><strong>Pre-Registration:</strong> Sync OS timezone, clear browser state, verify residential IP, prepare compliant phone number and card.</li>
-  <li><strong>Payment Binding:</strong> Use high-reputation BINs, real billing addresses, sufficient balance, and never reuse cards across 3+ accounts.</li>
+  <li><strong>Payment Binding:</strong> Use a credit or debit card from an established bank, a real billing address that matches your bank's record, enough balance for renewals, and avoid reusing one card across several accounts.</li>
   <li><strong>Daily Usage:</strong> Maintain consistent timezone/IP/device fingerprints, enable 2FA, avoid rapid IP changes without 2FA re-auth.</li>
   <li><strong>API Automation:</strong> Implement rate limiting, jitter, residential proxies, and prompt variation to avoid distillation flags.</li>
   <li><strong>Multi-Account:</strong> Isolate organizationUuid, payment methods, and usage patterns to prevent association bans.</li>
 </ul>
 `,
   zh: `
+<p><strong>说明：</strong>以下案例细节未经独立核实，根因是解读，不是 Anthropic 确认的结论。Anthropic 官方公布的封禁原因见<a href="/zh/guides/antiban-essentials/">防封速查手册</a>。</p>
+
 <h2>一、 案例 1：时区不一致导致的批量封号</h2>
 <p><strong>事件：</strong> 一个 15 人开发团队在海外出差期间注册 Claude Pro 账号。72 小时内，12 个账号因"违反服务条款"被永久封禁。</p>
 
@@ -143,21 +147,21 @@ sudo systemsetup -settimezone "America/New_York"</code></pre>
   <li>更改时区后清除所有浏览器 Cookie 并重启，以刷新缓存的指纹。</li>
 </ul>
 
-<h2>二、 案例 2：虚拟卡 BIN 高风险触发退款封号</h2>
+<h2>二、 案例 2：预付虚拟卡被退款并暂停账号</h2>
 <p><strong>事件：</strong> 八个 Claude Pro 订阅在第 1 天成功扣款，但在 48 小时内被自动退款并暂停账号。</p>
 
 <h3>根因分析</h3>
 <ul>
-  <li>所有账号使用 BIN 为 <code>4571</code> 的虚拟预付 Visa 卡，这是公认的高风险 BIN，频繁被用于试用滥用。</li>
+  <li>所有账号使用同一 BIN 发行的虚拟预付 Visa 卡。Anthropic 没有公布会拦截哪些 BIN，而且 Pro 与 Max 并未列出接受预付卡。</li>
   <li>账单地址是通用地址（如"123 Main St"），而非与发卡银行地区匹配的真实住宅地址。</li>
-  <li>Anthropic 的支付处理商将交易标记为高风险，触发自动退款，账号被标记为"Refunded / Suspended"。</li>
+  <li>扣款被退回，账号被标记为"Refunded / Suspended"。Anthropic 没有说明原因。</li>
 </ul>
 
 <h3>规避检查清单</h3>
 <ul>
-  <li>使用信誉良好的虚拟卡 BIN（如 <code>485932</code>、<code>532959</code>、<code>428803</code>），由知名美国金融科技银行发行。</li>
+  <li>使用成熟银行发行的信用卡或借记卡，而不是预付虚拟卡。</li>
   <li>填写真实、可验证的美国地址（使用 USPS 地址查询），与代理 IP 所在州匹配。</li>
-  <li>绑卡前确保卡内余额超过 25 美元，以覆盖 1 美元预授权冻结和首月费用。</li>
+  <li>确保卡内余额够支付首次扣款和下一次续费。</li>
   <li>切勿将同一张虚拟卡绑定到超过 2 个 Claude 账号。</li>
 </ul>
 
@@ -225,7 +229,7 @@ python3 -c "import json; d=json.load(open('.claude.json')); print(d.get('oauthAc
 
 <ul>
   <li><strong>注册前：</strong> 同步操作系统时区、清除浏览器状态、验证住宅 IP、准备合规手机号和卡。</li>
-  <li><strong>支付绑定：</strong> 使用高信誉 BIN、真实账单地址、充足余额，切勿在 3+ 个账号间重用卡。</li>
+  <li><strong>支付绑定：</strong> 使用成熟银行发行的信用卡或借记卡、与银行记录一致的真实账单地址、够用的余额，避免一张卡绑定多个账号。</li>
   <li><strong>日常使用：</strong> 保持时区/IP/设备指纹一致，启用 2FA，避免在没有 2FA 重新认证的情况下快速更改 IP。</li>
   <li><strong>API 自动化：</strong> 实施速率限制、抖动、住宅代理和提示词变化，以避免蒸馏标记。</li>
   <li><strong>多账号：</strong> 隔离 organizationUuid、支付方式和使用模式，以防止关联封号。</li>

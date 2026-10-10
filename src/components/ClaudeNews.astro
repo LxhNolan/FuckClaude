@@ -6,11 +6,16 @@ interface Props {
   lang: Lang;
   limit?: number;
   showMoreLink?: boolean;
+  /** Restrict the list to these categories (defaults to all). */
+  categories?: NewsCategory[];
+  /** Overrides for the block heading and subheading. */
+  title?: string;
+  sub?: string;
 }
 
-const { lang, limit, showMoreLink = false } = Astro.props;
+const { lang, limit, showMoreLink = false, categories, title, sub } = Astro.props;
 const t = useTranslations(lang);
-const items = getLatestNews(limit);
+const items = getLatestNews(limit, categories);
 const newsHub = lang === 'zh' ? '/zh/news/' : '/news/';
 const guidePrefix = lang === 'zh' ? '/zh/guides/' : '/guides/';
 
@@ -30,8 +35,8 @@ function categoryLabel(category: NewsCategory, locale: Lang): string {
 <section class="news-block" aria-labelledby="news-block-title">
   <div class="news-block__head">
     <div>
-      <h2 id="news-block-title">{t('news.title')}</h2>
-      <p>{t('news.sub')}</p>
+      <h2 id="news-block-title">{title ?? t('news.title')}</h2>
+      <p>{sub ?? t('news.sub')}</p>
     </div>
     {
       showMoreLink && (

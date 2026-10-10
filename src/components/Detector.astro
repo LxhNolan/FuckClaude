@@ -1,7 +1,7 @@
 ---
 import { useTranslations, type Lang } from '../i18n/ui';
 import { SIGNALS } from '../config/signals';
-import { GUIDES } from '../config/guides';
+import { getGuide, type GuideArticle } from '../config/guides';
 import LangToggle from './LangToggle.astro';
 import ScoreRing from './ScoreRing.astro';
 import Mascot from './Mascot.astro';
@@ -22,10 +22,14 @@ const home = lang === 'zh' ? '/zh/' : '/';
 const guidesHub = lang === 'zh' ? '/zh/guides/' : '/guides/';
 const newsHub = lang === 'zh' ? '/zh/news/' : '/news/';
 const guideUrl = (slug: string) => (lang === 'zh' ? `/zh/guides/${slug}/` : `/guides/${slug}/`);
-const featuredGuides = [
-  GUIDES.find((g) => g.slug === 'antiban-essentials'),
-  ...GUIDES.filter((g) => g.slug !== 'antiban-essentials').slice(0, 2),
-].filter((g): g is (typeof GUIDES)[number] => g !== undefined);
+const FEATURED_GUIDE_SLUGS = [
+  'antiban-essentials',
+  'environment-cleanup-and-ip-setup',
+  'account-appeal-and-recovery-sop',
+];
+const featuredGuides = FEATURED_GUIDE_SLUGS.map(getGuide).filter(
+  (guide): guide is GuideArticle => guide !== undefined,
+);
 const reduceSteps = [t('reduce.s1'), t('reduce.s2'), t('reduce.s3'), t('reduce.s4'), t('reduce.s5')];
 
 const API_BASE = 'https://fuck-claude.happinessrailway.com/api/check';

@@ -9,10 +9,10 @@
  *   - `accept-language`       — browser/UA language preferences
  *   - `user-agent`            — OS/vendor guess for the emoji signal
  *
- * Fonts (Chinese + vendor faces), Intl locale and WebRTC IP leak are
- * browser-only, so the score is computed over the measurable weight (62/100)
- * and normalised to 0–100. It reuses the exact same pure scorers as the client
- * so results stay consistent.
+ * Fonts, Intl locale, and WebRTC IP leak are browser-only. The score is
+ * computed over the active region's server-measurable weight sum and normalised
+ * to 0–100. It reuses the same pure scorers as the client (`signalsFor` +
+ * `regionForLang`).
  *
  * Response format:
  *   - default (curl, browser, …)                      → pretty plain-text report
@@ -26,16 +26,40 @@
  */
 import type { APIRoute } from 'astro';
 import {
-  SIGNALS,
   riskBand,
-  scoreTimezone,
-  scoreLanguages,
+  scoreBrowserForRegion,
+  scoreDeviceForRegion,
   scoreEmojiVendor,
-  scoreCnBrowser,
-  scoreCnDevice,
+  scoreLanguagesForRegion,
+  scoreTimezoneForRegion,
+  scoreTimezoneOffsetMinutes,
+  regionForLang,
+  signalsFor,
+  isServerMeasurable,
+  activeWeightForRegion,
   type RiskBand,
   type SignalId,
+  type RegionId,
 } from '../../config/signals';
+import { REGIONS } from '../../config/regions';
+import {
+  CHECK_CLI_BROWSER_ONLY,
+  CHECK_CLI_COVERAGE,
+  CHECK_CLI_FULL,
+  CHECK_CLI_GEO,
+  CHECK_CLI_HINT_JSON,
+  CHECK_CLI_HINT_LANG,
+  CHECK_CLI_MEASURED,
+  CHECK_CLI_NONE,
+  CHECK_CLI_NOTE,
+  CHECK_CLI_SCORE,
+  CHECK_CLI_SUBTITLE,
+  CHECK_CLI_TAGLINE,
+  CHECK_JSON_NOTE,
+} from '../../i18n/api-messages';
+import { localePath } from '../../i18n/locales';
+import { localize } from '../../i18n/localize';
+import { pickLangFromQueryOrHeader } from '../../i18n/pick-lang';
 import { useTranslations, type Lang } from '../../i18n/ui';
 
 export const prerender = false;
@@ -103,9 +127,7 @@ function fmtOffset(min: number | null): string {
 }
 
 function pickLang(url: URL, acceptLang: string[]): Lang {
-  const q = (url.searchParams.get('lang') || '').toLowerCase();
-  if (q === 'zh' || q === 'en') return q;
-  return (acceptLang[0] || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  return pickLangFromQueryOrHeader(url.searchParams.get('lang'), acceptLang.join(', '));
 }
 
 /**
@@ -134,33 +156,61 @@ function wantsColor(url: URL, req: Request): boolean {
   return !/mozilla|chrome\/|safari\/|firefox\/|edg\//.test(ua);
 }
 
+function regionMeasuredValues(
+  regionId: RegionId,
+  tz: string,
+  acceptLang: string[],
+  ua: string,
+): Partial<Record<SignalId, { value: string; score: number }>> {
+  const profile = REGIONS[regionId];
+  const offsetEast = tzOffsetEastMinutes(tz);
+  const offsetWest = offsetEast === null ? null : -offsetEast;
+  const emoji = scoreEmojiVendor(ua);
+  const browser = scoreBrowserForRegion(ua, regionId);
+  const device = scoreDeviceForRegion(ua, regionId);
+
+  const out: Partial<Record<SignalId, { value: string; score: number }>> = {
+    timezone: { value: tz || 'unknown', score: scoreTimezoneForRegion(tz, profile) },
+    language: {
+      value: acceptLang.join(', ') || 'unknown',
+      score: scoreLanguagesForRegion(acceptLang, regionId),
+    },
+    cnBrowser: { value: browser.name ?? 'none detected', score: browser.score },
+    deviceVendor: { value: device.name ?? 'none detected', score: device.score },
+    emoji: { value: `${emoji.vendor} style`, score: emoji.score },
+  };
+  if (profile.weights.timezoneOffset > 0 && offsetWest !== null) {
+    out.timezoneOffset = {
+      value: fmtOffset(offsetEast),
+      score: scoreTimezoneOffsetMinutes(offsetWest, profile),
+    };
+  }
+  return out;
+}
+
 function analyze(req: Request, lang: Lang): Analysis {
   const t = useTranslations(lang);
+  const regionId = regionForLang(lang);
+  const activeSignals = signalsFor(regionId);
   const tz = req.headers.get('x-vercel-ip-timezone') || '';
   const country = req.headers.get('x-vercel-ip-country') || '';
   const acceptLang = parseAcceptLanguage(req.headers.get('accept-language') || '');
   const ua = req.headers.get('user-agent') || '';
 
-  const offsetEast = tzOffsetEastMinutes(tz);
-  const emoji = scoreEmojiVendor(ua);
-  const cnBrowser = scoreCnBrowser(ua);
-  const cnDevice = scoreCnDevice(ua);
-
-  const measured: Partial<Record<SignalId, { value: string; score: number }>> = {
-    timezone: { value: tz || 'unknown', score: scoreTimezone(tz) },
-    language: { value: acceptLang.join(', ') || 'unknown', score: scoreLanguages(acceptLang) },
-    cnBrowser: { value: cnBrowser.name ?? 'none detected', score: cnBrowser.score },
-    deviceVendor: { value: cnDevice.name ?? 'none detected', score: cnDevice.score },
-    timezoneOffset: { value: fmtOffset(offsetEast), score: offsetEast === 480 ? 0.7 : 0 },
-    emoji: { value: `${emoji.vendor} style`, score: emoji.score },
-  };
+  const measuredAll = regionMeasuredValues(regionId, tz, acceptLang, ua);
+  const measured: Partial<Record<SignalId, { value: string; score: number }>> = {};
+  for (const id of Object.keys(measuredAll) as SignalId[]) {
+    const weight = REGIONS[regionId].weights[id];
+    if (weight > 0 && isServerMeasurable(id)) {
+      measured[id] = measuredAll[id];
+    }
+  }
 
   let rawContribution = 0;
   let measuredWeight = 0;
-  let totalWeight = 0;
+  const totalWeight = activeWeightForRegion(regionId);
 
-  const signals: SignalResult[] = SIGNALS.map((s) => {
-    totalWeight += s.weight;
+  const signals: SignalResult[] = activeSignals.map((s) => {
     const m = measured[s.id];
     if (m) {
       const contribution = Math.round(m.score * s.weight);
@@ -213,11 +263,8 @@ function jsonBody(a: Analysis, lang: Lang) {
     coverage: { measuredWeight: a.measuredWeight, totalWeight: a.totalWeight },
     geo: a.geo,
     signals: a.signals,
-    note:
-      lang === 'zh'
-        ? '基于 IP 归属地与请求头的服务端估算,与浏览器端读取操作系统的检测结果可能不同;中文字体、厂商字体、Intl locale 与 WebRTC 泄露只能在浏览器里检测。'
-        : 'Server-side estimate from IP geo + request headers; it can differ from the in-browser OS scan. Chinese fonts, vendor fonts, Intl locale and WebRTC leaks can only be measured in a browser.',
-    docs: lang === 'zh' ? `${SITE}/zh/` : `${SITE}/`,
+    note: localize(CHECK_JSON_NOTE, lang),
+    docs: `${SITE.replace(/\/$/, '')}${localePath(lang, '/')}`,
   };
 }
 
@@ -233,38 +280,22 @@ function textBody(a: Analysis, lang: Lang, color: boolean): string {
     a.band
   ];
 
-  const L =
-    lang === 'zh'
-      ? {
-          subtitle: '「Claude 中国用户」检测',
-          tagline: '基于 IP 归属地 + 请求头的服务端估算',
-          score: '风险分',
-          measured: '服务端可见信号',
-          browserOnly: '仅浏览器可测(curl 看不到)',
-          coverage: '覆盖',
-          geo: '归属地',
-          noteBody: 'IP/请求头估算,与浏览器端系统检测结果可能不同。',
-          full: '完整检测',
-          hintJson: 'JSON      → 加 ?format=json',
-          hintLang: '语言      → 自动跟随 Accept-Language',
-          none: '无',
-        }
-      : {
-          subtitle: 'Claude "China user" check',
-          tagline: 'Server-side estimate from IP geo + request headers',
-          score: 'Score',
-          measured: 'Signals visible server-side',
-          browserOnly: 'Browser-only (invisible to curl)',
-          coverage: 'Coverage',
-          geo: 'Geo',
-          noteBody: 'IP/header estimate; differs from the in-browser OS scan.',
-          full: 'Full scan',
-          hintJson: 'JSON      → add ?format=json',
-          hintLang: 'Language  → follows Accept-Language',
-          none: 'none',
-        };
+  const L = {
+    subtitle: localize(CHECK_CLI_SUBTITLE, lang),
+    tagline: localize(CHECK_CLI_TAGLINE, lang),
+    score: localize(CHECK_CLI_SCORE, lang),
+    measured: localize(CHECK_CLI_MEASURED, lang),
+    browserOnly: localize(CHECK_CLI_BROWSER_ONLY, lang),
+    coverage: localize(CHECK_CLI_COVERAGE, lang),
+    geo: localize(CHECK_CLI_GEO, lang),
+    noteBody: localize(CHECK_CLI_NOTE, lang),
+    full: localize(CHECK_CLI_FULL, lang),
+    hintJson: localize(CHECK_CLI_HINT_JSON, lang),
+    hintLang: localize(CHECK_CLI_HINT_LANG, lang),
+    none: localize(CHECK_CLI_NONE, lang),
+  };
 
-  const home = lang === 'zh' ? `${SITE}/zh/` : `${SITE}/`;
+  const home = `${SITE.replace(/\/$/, '')}${localePath(lang, '/')}`;
   const geoStr = [a.geo.country, a.geo.timezone].filter(Boolean).join(' · ') || L.none;
   const browserOnly =
     a.signals

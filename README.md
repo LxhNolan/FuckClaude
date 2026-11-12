@@ -2,7 +2,7 @@
 
 English | [中文](#中文)
 
-A lightweight, SEO-friendly, bilingual (EN / 中文) single-page tool that scans your
+A lightweight, SEO-friendly tool (English at `/`, plus `zh`, `ru`, `fa`, `es`, `ar`, `my` under path prefixes) that scans your
 **browser environment** and tells you whether Claude Code would flag you as a China
 user. One click runs an animated scan of each signal, the gauge climbs as risk adds
 up, and you get a verdict plus the list of matched signals. Everything runs **100%
@@ -29,9 +29,7 @@ Claude's real check. The other signals are general "Chinese environment" fingerp
 | 🏆 Sponsors 🏆 | Introduction |
 | --- | --- |
 | <a href="https://go.apimart.ai/s-fuck-claude"><img src="public/sponsors/apimart-wordmark.jpg" width="160" alt="APIMart.AI"></a> | **[APIMart.AI — GPT-Image-2 from $0.006 per image](https://go.apimart.ai/s-fuck-claude)**<br>Thanks to APIMart for sponsoring this project! A low-cost API platform focused on AI image and video generation, stable and fast. GPT-Image-2 starts at $0.006 per image, so $1 generates 160+ images. [Try now](https://go.apimart.ai/s-fuck-claude). |
-| <a href="https://roxybrowser.cn/invite/A4YZ2O"><img src="public/sponsors/roxy-wordmark.jpg" width="140" alt="Roxy Browser"></a> | **[Roxy Browser \| Multi-account farming & anti-ban](https://roxybrowser.cn/invite/A4YZ2O)** (10% off promo code)<br>Thanks to Roxy Browser for sponsoring this project! Built to bypass AI-platform risk-control checks: fully masks Canvas, WebGL and other low-level fingerprints, gives every account absolute physical isolation, and keeps batch account farming stable and ban-free. |
-| <a href="https://www.energy-rent.work/"><img src="public/sponsors/flashrent-wordmark.png" width="170" alt="FlashRent"></a> | **[FlashRent — TRON Energy Rental](https://www.energy-rent.work/)**<br>Thanks to FlashRent for sponsoring this project! Save up to 80% on USDT transfer gas fees on TRON. Instant delegation without freezing TRX — supports single rentals, bulk orders, and Telegram bot integration. [Try free](https://www.energy-rent.work/). |
-| <a href="https://agentearth.ai/login?mode=register&ref_code=Ot7RhpNk"><img src="public/sponsors/agentearth-wordmark.png" width="160" alt="AgentEarth"></a> | **[AgentEarth — Sign up for 5,000 credits ($5 value)](https://agentearth.ai/login?mode=register&ref_code=Ot7RhpNk)**<br>Thanks to AgentEarth for sponsoring this project! Unified gateway to 1,400+ pro APIs for AI Agents — search, finance, scraping, multimodal, and more. MCP & Skill ready. New users get 5,000 credits free ($5 value). [Sign up free](https://agentearth.ai/login?mode=register&ref_code=Ot7RhpNk). |
+| <a href="https://cdnd.sh/from/fuck-claude"><img src="public/sponsors/cdnd-icon.png" width="48" alt="CDND"></a> | **[CDND · CODE NEVER DIE](https://cdnd.sh/from/fuck-claude)**<br>Thanks to CDND for sponsoring this project! 100% official pass-through Claude Code gateway — full power, zero injection, domestic direct access, unlimited concurrency, ~28% of list price. [Try now](https://cdnd.sh/from/fuck-claude). |
 
 ## Detected signals & weights
 
@@ -52,6 +50,8 @@ Each signal returns a `0–1` "China-like" score, multiplied by its weight; the 
 weights sum to **100**, so the total score is the sum of contributions. Bands: Low
 `0–30`, Medium `31–60`, High `61–100`. A signal counts as a "hit" when its score
 ≥ 0.25.
+
+[Claude Cage](https://github.com/Lee-xeo/Claude-Cage) is an independent community virtual-machine desktop workbench. It provides network, time zone, and isolation checks. This is not an official endorsement, and it does not guarantee that an account stays unrestricted.
 
 ## Anti-Ban Guides
 
@@ -202,11 +202,11 @@ Claude Code 标记为中国用户。点击后会有逐项检测的扫描动效,�
 | 🏆 赞助商 🏆 | 介绍 |
 | --- | --- |
 | <a href="https://go.apimart.ai/s-fuck-claude"><img src="public/sponsors/apimart-wordmark.jpg" width="160" alt="APIMart.AI"></a> | **[APIMart.AI — GPT-Image-2 低至 $0.006/张](https://go.apimart.ai/s-fuck-claude)**<br>感谢 APIMart 赞助本项目！专注 AI 图片/视频生成的低价 API 平台，长期稳定、响应快。GPT-Image-2 低至 $0.006/张，1 美元可出图 160+ 张。欢迎[立即体验](https://go.apimart.ai/s-fuck-claude)。 |
-| <a href="https://roxybrowser.cn/invite/A4YZ2O"><img src="public/sponsors/roxy-wordmark.jpg" width="140" alt="Roxy 浏览器"></a> | **[Roxy 浏览器 \| 养号&多账号防封号](https://roxybrowser.cn/invite/A4YZ2O)**(优惠码 9 折)<br>感谢 Roxy 浏览器 赞助本项目!专为绕过 AI 平台风控检测而生!完美屏蔽 Canvas、WebGL 等底层指纹,实现多账号绝对物理隔离,批量养号稳定防封。 |
-| <a href="https://www.energy-rent.work/"><img src="public/sponsors/flashrent-wordmark.png" width="170" alt="FlashRent"></a> | **[FlashRent — 波场能量租用平台](https://www.energy-rent.work/)**<br>感谢 FlashRent 赞助本项目！波场 TRON 能量租用，USDT 转账手续费立省高达 80%。秒级到账，无需冻结 TRX，支持单笔租用、批量派发与 Telegram Bot 集成。欢迎[免费体验](https://www.energy-rent.work/)。 |
-| <a href="https://agentearth.ai/login?mode=register&ref_code=Ot7RhpNk"><img src="public/sponsors/agentearth-wordmark.png" width="160" alt="AgentEarth"></a> | **[AgentEarth — 新用户注册即赠 5,000 积分（价值 $5）](https://agentearth.ai/login?mode=register&ref_code=Ot7RhpNk)**<br>感谢 AgentEarth 赞助本项目！专为 AI Agent 打造的专业 API 工具聚合平台，一键接入 1,400+ 外部工具（搜索、金融、爬虫、多模态等），全面支持 MCP 与 Skill 协议。注册即送 5,000 积分（价值 $5），[立即注册](https://agentearth.ai/login?mode=register&ref_code=Ot7RhpNk)。 |
+| <a href="https://cdnd.sh/from/fuck-claude"><img src="public/sponsors/cdnd-icon.png" width="48" alt="CDND"></a> | **[CDND · CODE NEVER DIE](https://cdnd.sh/from/fuck-claude)**<br>感谢 CDND 赞助本项目！100% 官方透传 Claude Code 中转，全功能、零注入、国内直连、无限并发，约官方价格 28%。[立即体验](https://cdnd.sh/from/fuck-claude)。 |
 
 ## 检测信号与权重
+
+英文 `/` 与中文 `/zh/` 使用 **cn** 档案(下表,十项合计 100,与改造前一致)。`/ru/`、`/fa/`、`/es/`、`/ar/`、`/my/` 各用 `src/config/regions.ts` 中的区域档案:仅 weight>0 的信号出现在扫描列表与 JSON-LD 中,时区 / 语言 / 字体 / 浏览器等列表随国家变化。`signalsFor(regionId)` 与 `npm run signals:check` 负责校验。
 
 | 信号 | 权重 | 检测方式 |
 | --- | --- | --- |
@@ -228,6 +228,8 @@ Claude Code 标记为中国用户。点击后会有逐项检测的扫描动效,�
 > **不计分**;繁体中文字体只保留极低的模糊分(无法区分台湾与港澳)。香港、澳门
 > 属于受限地区,相关信号保留部分风险分。
 
+[Claude Cage](https://github.com/Lee-xeo/Claude-Cage)：独立社区的虚拟机桌面工作台，提供网络、时区与隔离检查。不代表官方背书，也不保证账号不受限制。
+
 ## 防封指南资料库
 
 中英双语资料库:[`/guides/`](https://fuck-claude.vercel.app/guides/)(英文)与
@@ -242,8 +244,8 @@ Claude Code 标记为中国用户。点击后会有逐项检测的扫描动效,�
 - **curl / HTTP 接口** —— 网站是静态的,但 `/api/check` 是一个极小的 Vercel Function,
   为终端与脚本返回服务端估算。它基于请求可见的信息评分 —— Vercel 归属地时区
   (`x-vercel-ip-timezone`)、国家、`Accept-Language` 头与 User-Agent(emoji 厂商 +
-  国产浏览器 + 国产品牌设备)—— 在可检测的 62/100 权重上(中文字体、厂商字体、
-  Intl locale 与 WebRTC 泄露仅浏览器可测)归一化到 0–100,复用与浏览器扫描完全一致的评分器。
+  国产浏览器 + 国产品牌设备)—— 在**该区域**服务端可测的权重之和上(字体、Intl locale、
+  WebRTC 等仅浏览器可测)归一化到 0–100,复用与浏览器扫描完全一致的 `score*ForRegion` 评分器。
   响应语言会自动跟随你的 `Accept-Language` 请求头。
 
 ```bash
@@ -276,7 +278,8 @@ curl "https://fuck-claude.vercel.app/api/check?format=json"
 
 ```
 src/
-├── config/signals.ts    # 信号定义、权重、检测函数、图标
+├── config/regions.ts    # 区域档案 (时区/语言/字体/权重)
+├── config/signals.ts    # signalsFor、纯评分函数、检测器
 ├── config/guides.ts     # 指南元数据:slug、分类、摘要、日期、相关指南、官方来源
 ├── config/official-rules.ts # 指南首页展示的 Anthropic 官方规则,每条附来源链接
 ├── config/sponsors.ts   # 赞助商列表(logo、链接、中英文案)

@@ -1,6 +1,8 @@
 ---
-import { useTranslations, type Lang } from '../i18n/ui';
-import { SIGNALS } from '../config/signals';
+import { localePath, type Lang } from '../i18n/locales';
+import { localize } from '../i18n/localize';
+import { useTranslations } from '../i18n/ui';
+import { regionForLang, signalsFor } from '../config/signals';
 import { getGuide, type GuideArticle } from '../config/guides';
 import LangToggle from './LangToggle.astro';
 import ScoreRing from './ScoreRing.astro';
@@ -19,12 +21,13 @@ interface Props {
   path: string;
 }
 const { lang } = Astro.props;
+const pageSignals = signalsFor(regionForLang(lang));
 const t = useTranslations(lang);
-const home = lang === 'zh' ? '/zh/' : '/';
-const guidesHub = lang === 'zh' ? '/zh/guides/' : '/guides/';
-const newsHub = lang === 'zh' ? '/zh/news/' : '/news/';
-const extensionPage = lang === 'zh' ? '/zh/extension/' : '/extension/';
-const guideUrl = (slug: string) => (lang === 'zh' ? `/zh/guides/${slug}/` : `/guides/${slug}/`);
+const home = localePath(lang, '/');
+const guidesHub = localePath(lang, '/guides/');
+const newsHub = localePath(lang, '/news/');
+const extensionPage = localePath(lang, '/extension/');
+const guideUrl = (slug: string) => localePath(lang, `/guides/${slug}/`);
 const FEATURED_GUIDE_SLUGS = [
   'antiban-essentials',
   'environment-cleanup-and-ip-setup',
@@ -101,8 +104,6 @@ const apiExamples = [
   </div>
 </header>
 
-<Sponsors lang={lang} />
-
 <main class="wrap">
   <section class="hero">
     <div class="credit">
@@ -117,6 +118,23 @@ const apiExamples = [
         <Mascot />
         <ScoreRing lang={lang} />
       </div>
+
+      <aside class="tool-card" aria-labelledby="tool-card-title">
+        <p class="tool-card__label" id="tool-card-title">{t('tools.title')}</p>
+        <div class="tool-card__row">
+          <div class="tool-card__copy">
+            <strong>{t('tools.cageName')}</strong>
+            <p>{t('tools.cageBody')}</p>
+          </div>
+          <a
+            class="tool-card__btn"
+            href="https://github.com/Lee-xeo/Claude-Cage"
+            target="_blank"
+            rel="noopener noreferrer"
+          >{t('tools.cageCta')}</a>
+        </div>
+        <p class="tool-card__note">{t('tools.cageNote')}</p>
+      </aside>
 
       <div class="result" id="result" hidden>
         <p class="result__title" id="result-title"></p>
@@ -180,6 +198,8 @@ const apiExamples = [
     </div>
   </section>
 
+  <Sponsors lang={lang} />
+
   <section id="scan-sec" aria-labelledby="scan-title">
     <div class="section-head">
       <h2 id="scan-title">{t('signals.title')}</h2>
@@ -187,7 +207,7 @@ const apiExamples = [
     </div>
     <ol class="scan-list" id="scan">
       {
-        SIGNALS.map((signal) => (
+        pageSignals.map((signal) => (
           <li class="scan-row is-pending" data-signal={signal.id}>
             <span class="scan-row__icon" set:html={signal.icon} />
             <span class="scan-row__main">
@@ -299,7 +319,7 @@ const apiExamples = [
         <h2 id="guides-title">{t('guides.title')}</h2>
         <p>{t('guides.sub')}</p>
       </div>
-      <a class="nav__link" href={lang === 'zh' ? '/zh/guides/' : '/guides/'}>
+      <a class="nav__link" href={guidesHub}>
         <span>{t('guides.readMore')} →</span>
       </a>
     </div>
@@ -307,7 +327,7 @@ const apiExamples = [
       {
         featuredGuides.map((guide) => (
           <a class="guide-box" href={guideUrl(guide.slug)}>
-            <h3>{guide.title[lang]}</h3>
+            <h3>{localize(guide.title, lang)}</h3>
             <p>{guide.summary[lang]}</p>
             <span class="guide-box__more">{t('guides.readMore')} →</span>
           </a>
@@ -344,7 +364,7 @@ const apiExamples = [
         <h2>{t('privacy.title')}</h2>
         <p>{t('privacy.body')}</p>
         <p class="privacy__link">
-          <a href={lang === 'zh' ? '/zh/privacy/' : '/privacy/'}>{t('privacy.fullPolicy')}</a>
+          <a href={localePath(lang, '/privacy/')}>{t('privacy.fullPolicy')}</a>
         </p>
       </div>
     </div>
@@ -497,6 +517,74 @@ const apiExamples = [
   .reduce-cta a {
     font-weight: 650;
     color: var(--accent-strong);
+  }
+
+  .tool-card {
+    margin: 22px auto 0;
+    max-width: 640px;
+    padding: 14px 16px 12px;
+    text-align: left;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .tool-card__label {
+    margin: 0 0 8px;
+    font-size: 0.75rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  .tool-card__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 16px;
+  }
+  .tool-card__copy {
+    min-width: 0;
+  }
+  .tool-card__copy strong {
+    display: block;
+    font-size: 1rem;
+    color: var(--text);
+  }
+  .tool-card__copy p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  .tool-card__btn {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.88rem;
+    font-weight: 650;
+    text-decoration: none;
+  }
+  .tool-card__btn:hover {
+    border-color: var(--accent);
+    color: var(--accent-strong);
+  }
+  .tool-card__note {
+    margin: 10px 0 0;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--muted-2);
+    overflow-wrap: anywhere;
+  }
+  @media (max-width: 560px) {
+    .tool-card__row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 
   /* ---------- guides showcase ---------- */

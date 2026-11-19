@@ -16,6 +16,8 @@ import { loadLocaleData } from '../i18n/locale-data-client';
 import { langFromDocument, useTranslations } from '../i18n/ui-client';
 
 type Kind = 'smash' | 'scan';
+/** Mirrors `data-state` on [data-stats]; `loading` lasts until the first snapshot. */
+type StatsState = 'loading' | 'on' | 'off';
 
 interface CountryCount {
   code: string;
@@ -42,11 +44,15 @@ const LINE_COUNT = 8;
 const PROPS = ['🍅', '🥚', '👟', '📄'];
 const HAMMER_SRC = '/mascot/hammer.svg';
 const HAMMER_SIZE = 78;
-const SWING_MS = 380;
+const SWING_MS = 230;
 const IMPACT_AT = 0.4;
-const DIZZY_MS = 1100;
-const STREAK_RESET_MS = 3500;
+const DIZZY_MS = 650;
+const STREAK_RESET_MS = 2500;
 const HURT_AT = [1, 5, 12];
+const REACT_MS = 550;
+const REACT_HOLD_MS = 1200;
+const REACT_AT = [0, 5, 12];
+const PRELOAD_DELAY_MS = 1500;
 
 const pageLang = langFromDocument();
 await loadLocaleData(pageLang);
@@ -62,10 +68,10 @@ const marksEl = q('#mascot-marks');
 const stamp = q('#mascot-stamp');
 const bubble = q('#mascot-bubble');
 const statsEls = document.querySelectorAll('[data-stats]');
-const numFormat = new Intl.NumberFormat(pageLang);
+const numFormat = new Intl.NumberFormat(pageLang, { numberingSystem: 'latn' });
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-let enabled = false;
+let state: StatsState = 'loading';
 let smashTotal = 0;
 let scanTotal = 0;
 let you = readYou();
@@ -73,6 +79,8 @@ let pending = 0;
 let flushTimer: number | undefined;
 let bubbleTimer: number | undefined;
 let dizzyTimer: number | undefined;
+let reactTimer: number | undefined;
+let reactionsLoaded = false;
 let streakTimer: number | undefined;
 let streak = 0;
 let lastLine = -1;
@@ -98,7 +106,9 @@ function saveYou() {
 function setNum(id: string, value: number, bump = false) {
   const el = q(id);
   if (!el) return;
-  el.textContent = numFormat.format(value);
+  const text = numFormat.format(value);
+  el.textContent = text;
+  el.style.setProperty('--len', String(text.length));
   if (!bump || reduceMotion.matches) return;
   el.classList.remove('is-bump');
   void el.offsetWidth;
@@ -146,12 +156,16 @@ function renderAll() {
   setNum('#stat-you', you);
 }
 
+function setStatsState(next: StatsState) {
+  state = next;
+  for (const el of statsEls) el.setAttribute('data-state', next);
+}
+
 function applySnapshot(snap: Snapshot) {
-  enabled = snap.enabled;
-  for (const el of statsEls) el.setAttribute('data-enabled', String(enabled));
+  setStatsState(snap.enabled ? 'on' : 'off');
   const note = q('#stats-note');
-  if (note) note.textContent = enabled ? t('rage.note') : t('rage.offline');
-  if (!enabled) return;
+  if (note) note.textContent = snap.enabled ? t('rage.note') : t('rage.offline');
+  if (!snap.enabled) return;
   smashTotal = snap.smash.total + pending;
   scanTotal = snap.scan.total;
   renderAll();
@@ -162,14 +176,18 @@ function applySnapshot(snap: Snapshot) {
 async function refresh() {
   try {
     const res = await fetch('/api/stats', { headers: { Accept: 'application/json' } });
-    if (res.ok) applySnapshot((await res.json()) as Snapshot);
+    if (res.ok) {
+      applySnapshot((await res.json()) as Snapshot);
+      return;
+    }
   } catch {
     /* offline: keep what is on screen */
   }
+  if (state === 'loading') setStatsState('off');
 }
 
 function send(kind: Kind, n: number, keepalive = false) {
-  if (!enabled || n <= 0) return;
+  if (state !== 'on' || n <= 0) return;
   void fetch('/api/stats', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -235,7 +253,7 @@ function spawnFx(text: string, x: number, y: number, size: number, opts: FxOptio
     { transform: `translate(calc(-50% + ${dx * 0.5}px), -190%) scale(1.15) rotate(${spin * 0.5}deg)`, opacity: 1, offset: 0.35 },
     { transform: `translate(calc(-50% + ${dx}px), 120%) scale(0.9) rotate(${spin}deg)`, opacity: 0 },
   ];
-  mountFx(el, frames, opts.duration ?? 750);
+  mountFx(el, frames, opts.duration ?? 520);
 }
 
 function spawnPlusOne(x: number, y: number) {
@@ -278,7 +296,7 @@ function spawnRing(x: number, y: number) {
       { transform: 'translate(-50%,-50%) scale(0.3)', opacity: 0.9 },
       { transform: 'translate(-50%,-50%) scale(4.5)', opacity: 0 },
     ],
-    420,
+    300,
   );
 }
 
@@ -291,7 +309,7 @@ function spawnSparks(x: number, y: number, count: number) {
     const dy = Math.sin(angle) * dist;
     spawnFx(i % 2 ? '✦' : '★', x, y, 14 + Math.random() * 8, {
       style: 'color:var(--accent-strong);',
-      duration: 460,
+      duration: 320,
       frames: [
         { transform: 'translate(-50%,-50%) scale(0.5)', opacity: 1 },
         { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(1.1) rotate(${dx * 4}deg)`, opacity: 0 },
@@ -315,19 +333,48 @@ function addMark(x: number, y: number) {
       { transform: `translate(-50%,-50%) rotate(${rotate}deg) scale(2.4)`, opacity: 0 },
       { transform: `translate(-50%,-50%) rotate(${rotate}deg) scale(1)`, opacity: 1 },
     ],
-    { duration: 160, easing: 'ease-out' },
+    { duration: 120, easing: 'ease-out' },
   );
+}
+
+/** Hurt illustrations are fetched after load or on first interest, not at page start. */
+function loadReactions() {
+  if (reactionsLoaded) return;
+  reactionsLoaded = true;
+  for (const img of document.querySelectorAll<HTMLImageElement>('.mascot__hitfig[data-src]')) {
+    img.src = img.dataset.src ?? '';
+  }
+}
+
+function reactionReady(level: number): boolean {
+  const img = document.querySelector<HTMLImageElement>(`.mascot__hitfig[data-level="${level}"]`);
+  return Boolean(img?.complete && img.naturalWidth > 0);
+}
+
+function setReact(level: number) {
+  mascotEl?.setAttribute('data-react', String(level));
+}
+
+/** Swap the state figure for a hurt illustration; the worst one lasts as long as the streak. */
+function react() {
+  const level = REACT_AT.filter((n) => streak >= n).length;
+  if (!reactionReady(level)) return;
+  setReact(level);
+  window.clearTimeout(reactTimer);
+  reactTimer = window.setTimeout(() => setReact(0), level === 3 ? REACT_HOLD_MS : REACT_MS);
 }
 
 function clearDamage() {
   streak = 0;
+  window.clearTimeout(reactTimer);
+  setReact(0);
   mascotEl?.setAttribute('data-hurt', '0');
   for (const el of marks.splice(0)) {
     if (reduceMotion.matches) {
       el.remove();
       continue;
     }
-    el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: 'forwards' }).onfinish = () => el.remove();
+    el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'forwards' }).onfinish = () => el.remove();
   }
 }
 
@@ -355,7 +402,7 @@ function impact(x: number, y: number, dir: number, milestone: boolean) {
     body.classList.add('is-hit');
   }
   spawnFx('💥', x, y, milestone ? 96 : 58, {
-    duration: 400,
+    duration: 280,
     frames: [
       { transform: 'translate(-50%,-50%) scale(0.3)', opacity: 1 },
       { transform: 'translate(-50%,-50%) scale(1.15)', opacity: 1, offset: 0.35 },
@@ -368,6 +415,7 @@ function impact(x: number, y: number, dir: number, milestone: boolean) {
   spawnPlusOne(x + 14, y - 8);
   addMark(x, y);
 
+  react();
   mascotEl?.classList.add('is-dizzy');
   window.clearTimeout(dizzyTimer);
   dizzyTimer = window.setTimeout(() => mascotEl?.classList.remove('is-dizzy'), DIZZY_MS);
@@ -380,7 +428,7 @@ function onHit(event: MouseEvent) {
   pending += 1;
   saveYou();
   setNum('#stat-you', you, true);
-  setNum('#stat-smash', smashTotal, true);
+  if (state === 'on') setNum('#stat-smash', smashTotal, true);
   mascotEl?.setAttribute('data-engaged', 'true');
   registerStreak();
 
@@ -411,11 +459,15 @@ function onHit(event: MouseEvent) {
 
 function onScanComplete() {
   scanTotal += 1;
-  setNum('#stat-scan', scanTotal, true);
+  if (state === 'on') setNum('#stat-scan', scanTotal, true);
   send('scan', 1);
 }
 
 hit?.addEventListener('click', onHit);
+for (const type of ['pointerenter', 'focus', 'touchstart'] as const) {
+  hit?.addEventListener(type, loadReactions, { once: true, passive: true });
+}
+window.setTimeout(loadReactions, PRELOAD_DELAY_MS);
 document.addEventListener('fc:scan-complete', onScanComplete);
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') flush(true);
